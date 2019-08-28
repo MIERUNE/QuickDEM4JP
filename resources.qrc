@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/convert_dem_to_geotiff" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
