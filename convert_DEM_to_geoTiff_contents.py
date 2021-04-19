@@ -8,7 +8,7 @@ from glob import glob
 from math import floor
 import sys
 import time
-import osr
+from osgeo import osr
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -104,7 +104,7 @@ class ConvertDEMtoGeotiffContents:
 
         meta_data = {}
         
-        with open(xml_path, 'r') as x:
+        with open(xml_path, 'r', encoding='utf8') as x:
             # メッシュコードを格納
             r = re.compile('<mesh>(.+)</mesh>')
             for x_line in x:
@@ -203,7 +203,7 @@ class ConvertDEMtoGeotiffContents:
 
         meta_data = self.get_metadata(file_name)
 
-        with open(xml_path, "r") as x:
+        with open(xml_path, 'r', encoding='utf8') as x:
             # メッシュコードを取得
             for x_line in x:
                 r = re.compile('<mesh>(.+)</mesh>')
