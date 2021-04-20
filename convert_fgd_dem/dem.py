@@ -1,3 +1,4 @@
+import os
 import shutil
 import xml.etree.ElementTree as et
 import zipfile
@@ -35,6 +36,40 @@ class Dem:
         self.bounds_latlng: dict = {}
         self._store_bounds_latlng()
 
+    def _unzip_dem(self, dest_dir):
+        """DEMが格納されたzipファイルを解凍する
+
+        Args:
+            dest_dir (Path): 解凍先のディレクトリパス
+
+        """
+        with zipfile.ZipFile(self.import_path, "r") as zip_data:
+            # 圧縮のされ方が違うため（？）、解凍後のフォルダ構成が異なるのでひとまず展開して後ほど移動
+            zip_data.extractall(path=dest_dir)
+            # macOSでzip解凍時に作成されるゴミファイルを削除
+            garbage_dir = dest_dir / "__MACOSX"
+            if garbage_dir.exists():
+                shutil.rmtree(garbage_dir)
+
+            # 解凍後のディレクトリの中に同名ディレクトリが作成されていなければreturn
+            if dest_dir.glob(".xml"):
+                return
+
+            # 作成されていれば、サブディレクトリから取り出す
+            for path in zip_data.namelist():
+                if path.endswith(".xml"):
+                    try:
+                        shutil.move(dest_dir / path, dest_dir)
+                    except shutil.Error:
+                        print(
+                            f"ファイルがすでに存在しています。"
+                            f"ファイルの移動をスキップし、オリジナルファイルを削除します：{dest_dir / path}")
+                        os.remove(dest_dir / path)
+                        continue
+            # 内部に親フォルダと同名ディレクトリが残るので削除
+            if (dest_dir / self.import_path.stem).exists():
+                (dest_dir / self.import_path.stem).rmdir()
+
     def _get_xml_paths(self):
         """指定したパスからxmlのPathオブジェクトのリストを作成
 
@@ -52,18 +87,13 @@ class Dem:
             xml_paths = [self.import_path]
 
         elif self.import_path.suffix == ".zip":
-            with zipfile.ZipFile(self.import_path, "r") as zip_data:
-                zip_data.extractall(
-                    path=self.import_path.parent
-                )
-                extract_dir = self.import_path.parent / self.import_path.stem
-                xml_paths = [
-                    xml_path for xml_path in extract_dir.glob("*.xml")]
-                if not xml_paths:
-                    raise Exception("指定のパスにxmlファイルが存在しません")
-            garbage_dir = self.import_path.parent / "__MACOSX"
-            if garbage_dir.exists():
-                shutil.rmtree(garbage_dir)
+            extract_dir = self.import_path.parent / self.import_path.stem
+            # 指定ディレクトリにunzip
+            self._unzip_dem(extract_dir)
+            xml_paths = [
+                xml_path for xml_path in extract_dir.glob("*.xml")]
+            if not xml_paths:
+                raise Exception("指定のパスにxmlファイルが存在しません")
         else:
             raise Exception(
                 "指定できる形式は「xml」「.xmlが格納されたディレクトリ」「.xmlが格納された.zip」のみです")
