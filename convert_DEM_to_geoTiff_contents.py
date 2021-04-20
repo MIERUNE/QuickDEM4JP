@@ -1,14 +1,6 @@
 # coding=utf-8
 
-import re
-import numpy as np
-from osgeo import gdal
 import os
-from glob import glob
-from math import floor
-import sys
-import time
-from osgeo import osr
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
