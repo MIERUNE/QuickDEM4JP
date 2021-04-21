@@ -25,7 +25,7 @@ class ConvertDEMtoGeotiffContents:
         self.dlg.mQgsFileWidget_2.setFilePath(self.current_dir)
 
         # ディレクトリの指定が出来るようにする
-        self.dlg.mQgsFileWidget_1.setStorageMode(QgsFileWidget.GetDirectory)
+        self.dlg.mQgsFileWidget_1.setStorageMode(QgsFileWidget.GetMultipleFiles)
         self.dlg.mQgsFileWidget_2.setStorageMode(QgsFileWidget.GetDirectory)
 
         # ダイアログのボタンボックスがaccepted（OK）されたらdlg_add()が作動
