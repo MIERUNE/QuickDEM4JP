@@ -25,8 +25,16 @@ class ConvertDEMtoGeotiffContents:
         self.dlg.mQgsFileWidget_2.setFilePath(self.current_dir)
 
         # ディレクトリの指定が出来るようにする
-        self.dlg.mQgsFileWidget_1.setStorageMode(QgsFileWidget.GetMultipleFiles)
         self.dlg.mQgsFileWidget_2.setStorageMode(QgsFileWidget.GetDirectory)
+
+        input_type = {
+            'zip or xml': 1,
+            'folder': 2,
+        }
+        # コンボボックスにデータ登録
+        for key in input_type:
+            self.dlg.comboBox.addItem(key, input_type[key])
+        self.dlg.comboBox.activated.connect(self.switch_input_type)
 
         # ダイアログのボタンボックスがaccepted（OK）されたらdlg_add()が作動
         self.dlg.button_box.accepted.connect(self.convert_DEM)
@@ -41,7 +49,7 @@ class ConvertDEMtoGeotiffContents:
 
         converter = Converter(
             import_path=self.import_path,
-            output_path=self.geotiff_output_path
+            output_path=self.geotiff_output_path,
         )
         converter.dem_to_geotiff()
 
@@ -54,3 +62,9 @@ class ConvertDEMtoGeotiffContents:
     def dlg_cancel(self):
         # ダイアログを非表示
         self.dlg.hide()
+
+    def switch_input_type(self):
+        if self.dlg.comboBox.currentData() == 1:
+            self.dlg.mQgsFileWidget_1.setStorageMode(QgsFileWidget.GetMultipleFiles)
+        else:
+            self.dlg.mQgsFileWidget_1.setStorageMode(QgsFileWidget.GetDirectory)
