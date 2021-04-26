@@ -1,10 +1,42 @@
-import subprocess
 from pathlib import Path
 
 import numpy as np
+import rasterio as rio
 
+from .lib.rio_rgbify.encoders import data_to_rgb
+from .lib.riomucho import RioMucho
 from .dem import Dem
 from .geotiff import Geotiff
+from .helpers import warp
+
+
+def _rgb_worker(data, window, ij, g_args):
+    return data_to_rgb(
+        data[0][g_args["bidx"] - 1], g_args["base_val"], g_args["interval"]
+    )
+
+
+def rgbify(
+        src_path,
+        dst_path,
+        base_val,
+        interval,
+):
+    """rio-rgbify method."""
+    workers = 1
+    with rio.open(src_path) as src:
+        meta = src.profile.copy()
+    meta.update(count=3, dtype=np.uint8)
+
+    gargs = {
+        "interval": interval,
+        "base_val": base_val,
+        "bidx": 1
+    }
+    with RioMucho(
+            [src_path], dst_path, _rgb_worker, options=meta, global_args=gargs
+    ) as rm:
+        rm.run(workers)
 
 
 class Converter:
@@ -160,12 +192,20 @@ class Converter:
         src_path = self.output_path / "output.tif"
 
         filled_dem_path = self.output_path / "nodata_none.tif"
-        warp_cmd = f"gdalwarp -overwrite -t_srs {self.output_epsg} -dstnodata None {src_path.resolve()} {filled_dem_path.resolve()}"
-        subprocess.check_output(warp_cmd, shell=True)
+        warp(
+            source_path=src_path.resolve(),
+            file_name=filled_dem_path.resolve(),
+            epsg=self.output_epsg,
+            output_path=self.output_path,
+        )
 
         rgb_path = self.output_path / "rgbify.tif"
-        rio_cmd = f"rio rgbify -b -10000 -i 0.1 {filled_dem_path.resolve()} {rgb_path.resolve()}"
-        subprocess.check_output(rio_cmd, shell=True)
+        rgbify(
+            src_path=filled_dem_path.resolve(),
+            dst_path=rgb_path.resolve(),
+            base_val=-10000,
+            interval=0.1
+        )
 
         filled_dem_path.unlink(missing_ok=False)
 

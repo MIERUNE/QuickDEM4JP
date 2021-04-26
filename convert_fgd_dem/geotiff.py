@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from osgeo import gdal, osr
+from .helpers import warp
 
 
 class Geotiff:
@@ -33,7 +34,7 @@ class Geotiff:
         self.x_length = x_length
         self.y_length = y_length
         self.output_path: Path = output_path
-
+        # TODO Noneよりディフォルトパス書いたほうがいいかな？
         self.created_tiff_path: Path = None
 
     def write_geotiff(self, file_name="output.tif", no_data_value=-9999):
@@ -76,7 +77,7 @@ class Geotiff:
             source_path=None,
             file_name="output.tif",
             epsg="EPSG:3857",
-            no_data_value=-9999):
+            no_data_value=0):
         """EPSG:4326のTiffから新たなGeoTiffを出力する
 
         Args:
@@ -88,19 +89,10 @@ class Geotiff:
         """
         if source_path is None:
             source_path = self.created_tiff_path
-
-        if file_name is None:
-            file_name = "".join(f"dem_{epsg.lower()}.tif".split(":"))
-
-        warp_path = str((self.output_path / file_name).resolve())
-        src_path = str(source_path.resolve())
-
-        resampled_ras = gdal.Warp(
-            warp_path,
-            src_path,
-            srcSRS="EPSG:4326",
-            dstSRS=epsg,
-            dstNodata=no_data_value,
-            resampleAlg="near",
+        warp(
+            source_path=source_path,
+            file_name=file_name,
+            epsg=epsg,
+            output_path=self.output_path,
+            no_data_value=no_data_value
         )
-        resampled_ras.FlushCache()
