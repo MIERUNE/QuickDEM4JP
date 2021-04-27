@@ -207,7 +207,7 @@ class Converter:
             interval=0.1
         )
 
-        filled_dem_path.unlink(missing_ok=False)
+        filled_dem_path.unlink()
 
     def dem_to_geotiff(self):
         """処理を一括で行い、選択されたディレクトリに入っているxmlをGeoTiffにコンバートして指定したディレクトリに吐き出す"""
