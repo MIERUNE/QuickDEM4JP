@@ -77,7 +77,7 @@ class Geotiff:
             source_path=None,
             file_name="output.tif",
             epsg="EPSG:3857",
-            no_data_value=0):
+            no_data_value=-9999):
         """EPSG:4326のTiffから新たなGeoTiffを出力する
 
         Args:

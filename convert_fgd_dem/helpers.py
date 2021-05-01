@@ -6,7 +6,7 @@ def warp(
         file_name="output.tif",
         output_path=None,
         epsg="EPSG:3857",
-        no_data_value=0):
+        no_data_value="None"):
     """
     EPSG:4326のTiffから新たなGeoTiffを出力する
 
