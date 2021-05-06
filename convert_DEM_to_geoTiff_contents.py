@@ -36,6 +36,14 @@ class ConvertDEMtoGeotiffContents:
             self.dlg.comboBox.addItem(key, input_type[key])
         self.dlg.comboBox.activated.connect(self.switch_input_type)
 
+        output_type = {
+            'only GeoTiff': 1,
+            'GeoTiff & Terrain RGB': 2,
+        }
+        # コンボボックスにデータ登録
+        for key in output_type:
+            self.dlg.comboBox_2.addItem(key, output_type[key])
+
         # ダイアログのボタンボックスがaccepted（OK）されたらdlg_add()が作動
         self.dlg.button_box.accepted.connect(self.convert_DEM)
         # ダイアログのボタンボックスがrejected（キャンセル）されたらdlg_cancel()が作動
@@ -47,14 +55,19 @@ class ConvertDEMtoGeotiffContents:
         self.import_path = self.dlg.mQgsFileWidget_1.filePath()
         self.geotiff_output_path = self.dlg.mQgsFileWidget_2.filePath()
 
+        rgbify = self.dlg.comboBox_2.currentIndex()
         converter = Converter(
             import_path=self.import_path,
             output_path=self.geotiff_output_path,
+            rgbify=rgbify
         )
         converter.dem_to_geotiff()
 
         output_layer = QgsRasterLayer(os.path.join(self.geotiff_output_path, 'output.tif'), 'output')
         QgsProject.instance().addMapLayer(output_layer)
+        if rgbify:
+            rgbify_layer = QgsRasterLayer(os.path.join(self.geotiff_output_path, 'rgbify.tif'), 'rgbify')
+            QgsProject.instance().addMapLayer(rgbify_layer)
 
         return True
 
