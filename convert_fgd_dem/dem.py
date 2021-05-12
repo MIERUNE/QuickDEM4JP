@@ -201,7 +201,7 @@ class Dem:
         if tuple_list.startswith("\n"):
             strip_tuple_list = tuple_list.strip()
             items = [item.split(",")[1]
-                     for item in strip_tuple_list.split("\n")]
+                    for item in strip_tuple_list.split("\n")]
         else:
             items = [item.split(",")[1] for item in tuple_list.split("\n")]
 

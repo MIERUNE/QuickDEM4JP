@@ -39,3 +39,15 @@ def warp(
         resampleAlg="near"
     )
     resampled_ras.FlushCache()
+
+
+def convert_height_to_rgb(height):
+    r_min_height = 256 * 256
+    g_min_height = 256
+    b_min_height = 0
+    offset_height = int(height * 10) + 100000
+
+    r_value = offset_height // r_min_height
+    g_value = (offset_height - r_value * r_min_height) // g_min_height
+    b_value = offset_height - r_value * r_min_height - g_value * g_min_height
+    return [r_value, g_value, b_value]

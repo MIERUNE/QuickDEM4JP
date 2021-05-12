@@ -2,6 +2,7 @@ from pathlib import Path
 
 import numpy as np
 import rasterio as rio
+from osgeo import gdal
 
 from .lib.rio_rgbify.encoders import data_to_rgb
 from .lib.riomucho import RioMucho
@@ -215,10 +216,15 @@ class Converter:
 
         geotiff = Geotiff(*data_for_geotiff)
 
-        geotiff.write_geotiff()
+        geotiff.write_geotiff(1, gdal.GDT_Float32)
 
         if not self.output_epsg == "EPSG:4326":
             geotiff.resampling(epsg=self.output_epsg)
 
         if self.rgbify:
-            self.dem_to_terrain_rgb()
+            # ここのコメントアウトを変えることでrasterio ⇄ numpyで切り替え
+            # self.dem_to_terrain_rgb()
+            geotiff.write_geotiff(3, gdal.GDT_Byte, file_name="rgbify.tif",  no_data_value=None, rgbify=True)
+
+            if not self.output_epsg == "EPSG:4326":
+                geotiff.resampling(epsg=self.output_epsg, file_name="rgbify.tif")

@@ -1,4 +1,6 @@
 __pycache__/
 .DS_Store
 DEM/
-Ge
+GeoTiff/
+*.tif
+*.xml
