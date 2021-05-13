@@ -81,7 +81,7 @@ class Geotiff:
         band_count,
         dtype,
         file_name="output.tif",
-        no_data_value=-9099,
+        no_data_value=-9999,
         rgbify=False
     ):
         """標高と座標、ピクセルサイズ、グリッドサイズからGeoTiffを作成
