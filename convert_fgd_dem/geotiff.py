@@ -42,7 +42,8 @@ class Geotiff:
         rgbify,
         band_count,
         dst_ds,
-        no_data_value=-9999):
+        no_data_value=-9999
+    ):
         """条件に応じてラスターのバンドを作成
 
         Args:

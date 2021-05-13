@@ -40,6 +40,7 @@ def warp(
     )
     resampled_ras.FlushCache()
 
+
 def convert_height_to_rgb(height, no_data_value=-9999):
     if height == no_data_value:
         # nodataを標高値0として計算

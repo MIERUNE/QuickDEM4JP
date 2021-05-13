@@ -5,7 +5,6 @@ from osgeo import gdal
 
 from .dem import Dem
 from .geotiff import Geotiff
-from .helpers import warp
 
 
 class Converter:

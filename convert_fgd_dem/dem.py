@@ -200,7 +200,7 @@ class Dem:
         if tuple_list.startswith("\n"):
             strip_tuple_list = tuple_list.strip()
             items = [item.split(",")[1]
-                    for item in strip_tuple_list.split("\n")]
+                     for item in strip_tuple_list.split("\n")]
         else:
             items = [item.split(",")[1] for item in tuple_list.split("\n")]
 
@@ -281,7 +281,6 @@ class Dem:
         mesh_code = content["mesh_code"]
         meta_data = content["meta_data"]
         elevation = content["elevation"]["items"]
-
 
         x_length = meta_data["grid_length"]["x"]
         y_length = meta_data["grid_length"]["y"]
