@@ -158,42 +158,29 @@ class Converter:
         )
         return data_for_geotiff
 
-    def dem_to_terrain_rgb(self):
-        src_path = self.output_path / "output.tif"
 
-        filled_dem_path = self.output_path / "nodata_none.tif"
-        warp(
-            source_path=src_path.resolve(),
-            file_name=filled_dem_path.resolve(),
-            epsg=self.output_epsg,
-            output_path=self.output_path,
-        )
-
-        rgb_path = self.output_path / "rgbify.tif"
-        rgbify(
-            src_path=filled_dem_path.resolve(),
-            dst_path=rgb_path.resolve(),
-            base_val=-10000,
-            interval=0.1
-        )
-
-        filled_dem_path.unlink()
-
-    def dem_to_geotiff(self):
-        """処理を一括で行い、選択されたディレクトリに入っているxmlをGeoTiffにコンバートして指定したディレクトリに吐き出す"""
+    def dem_to_geotiff_and_terrainRGB(self):
+        """
+        処理を一括で行い、選択されたディレクトリに入っているxmlをGeoTiffにコンバートして指定したディレクトリに吐き出す
+        rgbify=Trueの場合、terrainRGBも作成
+        """
         data_for_geotiff = self.make_data_for_geotiff()
 
         geotiff = Geotiff(*data_for_geotiff)
 
-        geotiff.write_geotiff(1, gdal.GDT_Float32)
+        geotiff.write_geotiff_or_terrainRGB(1, gdal.GDT_Float32)
 
         if not self.output_epsg == "EPSG:4326":
             geotiff.resampling(epsg=self.output_epsg)
 
         if self.rgbify:
-            # ここのコメントアウトを変えることでrasterio ⇄ numpyで切り替え
-            # self.dem_to_terrain_rgb()
-            geotiff.write_geotiff(3, gdal.GDT_Byte, file_name="rgbify.tif",  no_data_value=None, rgbify=True)
+            geotiff.write_geotiff_or_terrainRGB(
+                3,
+                gdal.GDT_Byte,
+                file_name="rgbify.tif",
+                no_data_value=None,
+                rgbify=True
+            )
 
             if not self.output_epsg == "EPSG:4326":
                 geotiff.resampling(epsg=self.output_epsg, file_name="rgbify.tif")

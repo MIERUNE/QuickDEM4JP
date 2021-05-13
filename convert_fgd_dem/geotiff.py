@@ -37,7 +37,7 @@ class Geotiff:
         self.y_length = y_length
         self.output_path: Path = output_path
 
-    def write_geotiff(
+    def write_geotiff_or_terrainRGB(
         self,
         band_count,
         dtype,
@@ -48,9 +48,11 @@ class Geotiff:
         """標高と座標、ピクセルサイズ、グリッドサイズからGeoTiffを作成
 
         Args:
+            band_count (int):
+            dtype (gdalのピクセルデータタイプ):
             file_name (str):
             no_data_value (int):
-
+            rgbify (bool):
         """
         if not self.output_path.exists():
             self.output_path.mkdir()
@@ -80,6 +82,7 @@ class Geotiff:
             b_arr = np.array(b_arr).reshape(self.y_length, self.x_length)
             self.np_array = np.stack([r_arr, g_arr, b_arr]).astype(np.uint8)
 
+            # 3バンドにnumpyのarrayをセット
             for band in range(1, band_count + 1):
                 raster_band = dst_ds.GetRasterBand(band)
                 raster_band.WriteArray(self.np_array[band - 1])

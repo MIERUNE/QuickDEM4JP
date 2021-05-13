@@ -27,7 +27,6 @@ class Dem:
         self.all_content_list: list = []
         self.mesh_code_list: list = []
         self.meta_data_list: list = []
-        self.elevation_list: list = []
         self._get_xml_content_list()
 
         self.np_array_list: list = []
@@ -248,8 +247,6 @@ class Dem:
         self._check_mesh_codes()
 
         self.meta_data_list = [item["meta_data"]
-                               for item in self.all_content_list]
-        self.elevation_list = [item["elevation"]
                                for item in self.all_content_list]
 
     def _store_bounds_latlng(self):
