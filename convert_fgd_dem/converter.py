@@ -4,40 +4,9 @@ import numpy as np
 import rasterio as rio
 from osgeo import gdal
 
-from .lib.rio_rgbify.encoders import data_to_rgb
-from .lib.riomucho import RioMucho
 from .dem import Dem
 from .geotiff import Geotiff
 from .helpers import warp
-
-
-def _rgb_worker(data, window, ij, g_args):
-    return data_to_rgb(
-        data[0][g_args["bidx"] - 1], g_args["base_val"], g_args["interval"]
-    )
-
-
-def rgbify(
-        src_path,
-        dst_path,
-        base_val,
-        interval,
-):
-    """rio-rgbify method."""
-    workers = 1
-    with rio.open(src_path) as src:
-        meta = src.profile.copy()
-    meta.update(count=3, dtype=np.uint8)
-
-    gargs = {
-        "interval": interval,
-        "base_val": base_val,
-        "bidx": 1
-    }
-    with RioMucho(
-            [src_path], dst_path, _rgb_worker, options=meta, global_args=gargs
-    ) as rm:
-        rm.run(workers)
 
 
 class Converter:
