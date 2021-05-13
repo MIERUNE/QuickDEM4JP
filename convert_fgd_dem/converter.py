@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import numpy as np
-import rasterio as rio
 from osgeo import gdal
 
 from .dem import Dem
@@ -159,7 +158,7 @@ class Converter:
         return data_for_geotiff
 
 
-    def dem_to_geotiff_and_terrainRGB(self):
+    def dem_to_geotiff(self):
         """
         処理を一括で行い、選択されたディレクトリに入っているxmlをGeoTiffにコンバートして指定したディレクトリに吐き出す
         rgbify=Trueの場合、terrainRGBも作成
