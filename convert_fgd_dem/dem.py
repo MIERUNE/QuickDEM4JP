@@ -282,6 +282,7 @@ class Dem:
         meta_data = content["meta_data"]
         elevation = content["elevation"]["items"]
 
+
         x_length = meta_data["grid_length"]["x"]
         y_length = meta_data["grid_length"]["y"]
 

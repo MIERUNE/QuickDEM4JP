@@ -40,10 +40,9 @@ def warp(
     )
     resampled_ras.FlushCache()
 
-
-def convert_height_to_rgb(height):
-    if height == -9999:
-        # -9999を標高値0として計算
+def convert_height_to_rgb(height, no_data_value=-9999):
+    if height == no_data_value:
+        # nodataを標高値0として計算
         return [1, 134, 160]
     r_min_height = 256 * 256
     g_min_height = 256

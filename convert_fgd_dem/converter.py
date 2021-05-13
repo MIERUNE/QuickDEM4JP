@@ -157,7 +157,6 @@ class Converter:
         )
         return data_for_geotiff
 
-
     def dem_to_geotiff(self):
         """
         処理を一括で行い、選択されたディレクトリに入っているxmlをGeoTiffにコンバートして指定したディレクトリに吐き出す
@@ -167,18 +166,17 @@ class Converter:
 
         geotiff = Geotiff(*data_for_geotiff)
 
-        geotiff.write_geotiff_or_terrainRGB(1, gdal.GDT_Float32)
+        geotiff.write(1, gdal.GDT_Float32)
 
         if not self.output_epsg == "EPSG:4326":
             geotiff.resampling(epsg=self.output_epsg)
 
         if self.rgbify:
-            geotiff.write_geotiff_or_terrainRGB(
+            geotiff.write(
                 3,
                 gdal.GDT_Byte,
                 file_name="rgbify.tif",
-                no_data_value=None,
-                rgbify=True
+                rgbify=self.rgbify
             )
 
             if not self.output_epsg == "EPSG:4326":

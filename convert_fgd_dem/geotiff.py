@@ -37,12 +37,50 @@ class Geotiff:
         self.y_length = y_length
         self.output_path: Path = output_path
 
-    def write_geotiff_or_terrainRGB(
+    def make_raster_bands(
+        self,
+        rgbify,
+        band_count,
+        dst_ds,
+        no_data_value=-9999):
+        """条件に応じてラスターのバンドを作成
+
+        Args:
+            rgbify (bool):
+            band_count (int):
+            dst_ds (gdalのドライバ):
+            no_data_value (int):
+        """
+        if rgbify:
+            r_arr, g_arr, b_arr = [], [], []
+            for i in self.np_array:
+                for j in i:
+                    r_value, g_value, b_value = convert_height_to_rgb(j)
+                    r_arr.append(r_value)
+                    g_arr.append(g_value)
+                    b_arr.append(b_value)
+            r_arr = np.array(r_arr).reshape(self.y_length, self.x_length)
+            g_arr = np.array(g_arr).reshape(self.y_length, self.x_length)
+            b_arr = np.array(b_arr).reshape(self.y_length, self.x_length)
+            self.np_array = np.stack([r_arr, g_arr, b_arr]).astype(np.uint8)
+
+            # 3バンドにnumpyのarrayをセット
+            for band in range(1, band_count + 1):
+                raster_band = dst_ds.GetRasterBand(band)
+                raster_band.WriteArray(self.np_array[band - 1])
+
+        else:
+            # 作成したラスターの第一バンドを取得し、numpyのarrayをセット
+            raster_band = dst_ds.GetRasterBand(1)
+            raster_band.WriteArray(self.np_array)
+            raster_band.SetNoDataValue(no_data_value)
+
+    def write(
         self,
         band_count,
         dtype,
         file_name="output.tif",
-        no_data_value=-9999,
+        no_data_value=-9099,
         rgbify=False
     ):
         """標高と座標、ピクセルサイズ、グリッドサイズからGeoTiffを作成
@@ -68,30 +106,12 @@ class Geotiff:
         )
         dst_ds.SetGeoTransform(self.geo_transform)
 
-        if rgbify:
-            r_arr, g_arr, b_arr = [], [], []
-            rgb_list = []
-            for i in self.np_array:
-                for j in i:
-                    r_value, g_value, b_value = convert_height_to_rgb(j)
-                    r_arr.append(r_value)
-                    g_arr.append(g_value)
-                    b_arr.append(b_value)
-            r_arr = np.array(r_arr).reshape(self.y_length, self.x_length)
-            g_arr = np.array(g_arr).reshape(self.y_length, self.x_length)
-            b_arr = np.array(b_arr).reshape(self.y_length, self.x_length)
-            self.np_array = np.stack([r_arr, g_arr, b_arr]).astype(np.uint8)
-
-            # 3バンドにnumpyのarrayをセット
-            for band in range(1, band_count + 1):
-                raster_band = dst_ds.GetRasterBand(band)
-                raster_band.WriteArray(self.np_array[band - 1])
-
-        else:
-            # 作成したラスターの第一バンドを取得し、numpyのarrayをセット
-            raster_band = dst_ds.GetRasterBand(1)
-            raster_band.WriteArray(self.np_array)
-            raster_band.SetNoDataValue(no_data_value)
+        self.make_raster_bands(
+            rgbify,
+            band_count,
+            dst_ds,
+            no_data_value
+        )
 
         ref = osr.SpatialReference()
         ref.ImportFromEPSG(4326)
