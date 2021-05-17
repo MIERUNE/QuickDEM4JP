@@ -3,7 +3,12 @@ from pathlib import Path
 from osgeo import gdal, osr
 import numpy as np
 
-from .helpers import warp, convert_height_to_rgb
+from .helpers import (
+    convert_height_to_R,
+    convert_height_to_G,
+    convert_height_to_B,
+    warp
+)
 
 
 class Geotiff:
@@ -53,17 +58,15 @@ class Geotiff:
             no_data_value (int):
         """
         if rgbify:
-            r_arr, g_arr, b_arr = [], [], []
-            for i in self.np_array:
-                for j in i:
-                    r_value, g_value, b_value = convert_height_to_rgb(j)
-                    r_arr.append(r_value)
-                    g_arr.append(g_value)
-                    b_arr.append(b_value)
-            r_arr = np.array(r_arr).reshape(self.y_length, self.x_length)
-            g_arr = np.array(g_arr).reshape(self.y_length, self.x_length)
-            b_arr = np.array(b_arr).reshape(self.y_length, self.x_length)
-            self.np_array = np.stack([r_arr, g_arr, b_arr]).astype(np.uint8)
+            func_R = np.frompyfunc(convert_height_to_R, 1, 1)
+            func_G = np.frompyfunc(convert_height_to_G, 2, 1)
+            func_B = np.frompyfunc(convert_height_to_B, 3, 1)
+
+            r_arr = func_R(self.np_array)
+            g_arr = func_G(self.np_array, r_arr)
+            b_arr = func_B(self.np_array, r_arr, g_arr)
+
+            self.np_array = np.array([r_arr, g_arr, b_arr])
 
             # 3バンドにnumpyのarrayをセット
             for band in range(1, band_count + 1):

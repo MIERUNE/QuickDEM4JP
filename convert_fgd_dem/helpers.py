@@ -41,16 +41,30 @@ def warp(
     resampled_ras.FlushCache()
 
 
-def convert_height_to_rgb(height, no_data_value=-9999):
+def convert_height_to_R(height, no_data_value=-9999):
     if height == no_data_value:
         # nodataを標高値0として計算
-        return [1, 134, 160]
-    r_min_height = 256 * 256
-    g_min_height = 256
-    b_min_height = 0
+        return 1
+    r_min_height = 65536
     offset_height = int(height * 10) + 100000
+    return offset_height // r_min_height
 
-    r_value = offset_height // r_min_height
-    g_value = (offset_height - r_value * r_min_height) // g_min_height
-    b_value = offset_height - r_value * r_min_height - g_value * g_min_height
-    return [r_value, g_value, b_value]
+
+def convert_height_to_G(height, r_value, no_data_value=-9999):
+    if height == no_data_value:
+        # nodataを標高値0として計算
+        return 134
+    r_min_height = 65536
+    g_min_height = 256
+    offset_height = int(height * 10) + 100000
+    return (offset_height - r_value * r_min_height) // g_min_height
+
+
+def convert_height_to_B(height, r_value, g_value, no_data_value=-9999):
+    if height == no_data_value:
+        # nodataを標高値0として計算
+        return 160
+    r_min_height = 65536
+    g_min_height = 256
+    offset_height = int(height * 10) + 100000
+    return offset_height - r_value * r_min_height - g_value * g_min_height
