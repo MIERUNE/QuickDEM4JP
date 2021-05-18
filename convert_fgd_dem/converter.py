@@ -1,42 +1,10 @@
 from pathlib import Path
 
 import numpy as np
-import rasterio as rio
+from osgeo import gdal
 
-from .lib.rio_rgbify.encoders import data_to_rgb
-from .lib.riomucho import RioMucho
 from .dem import Dem
 from .geotiff import Geotiff
-from .helpers import warp
-
-
-def _rgb_worker(data, window, ij, g_args):
-    return data_to_rgb(
-        data[0][g_args["bidx"] - 1], g_args["base_val"], g_args["interval"]
-    )
-
-
-def rgbify(
-        src_path,
-        dst_path,
-        base_val,
-        interval,
-):
-    """rio-rgbify method."""
-    workers = 1
-    with rio.open(src_path) as src:
-        meta = src.profile.copy()
-    meta.update(count=3, dtype=np.uint8)
-
-    gargs = {
-        "interval": interval,
-        "base_val": base_val,
-        "bidx": 1
-    }
-    with RioMucho(
-            [src_path], dst_path, _rgb_worker, options=meta, global_args=gargs
-    ) as rm:
-        rm.run(workers)
 
 
 class Converter:
@@ -188,37 +156,27 @@ class Converter:
         )
         return data_for_geotiff
 
-    def dem_to_terrain_rgb(self):
-        src_path = self.output_path / "output.tif"
-
-        filled_dem_path = self.output_path / "nodata_none.tif"
-        warp(
-            source_path=src_path.resolve(),
-            file_name=filled_dem_path.resolve(),
-            epsg=self.output_epsg,
-            output_path=self.output_path,
-        )
-
-        rgb_path = self.output_path / "rgbify.tif"
-        rgbify(
-            src_path=filled_dem_path.resolve(),
-            dst_path=rgb_path.resolve(),
-            base_val=-10000,
-            interval=0.1
-        )
-
-        filled_dem_path.unlink()
-
     def dem_to_geotiff(self):
-        """処理を一括で行い、選択されたディレクトリに入っているxmlをGeoTiffにコンバートして指定したディレクトリに吐き出す"""
+        """
+        処理を一括で行い、選択されたディレクトリに入っているxmlをGeoTiffにコンバートして指定したディレクトリに吐き出す
+        rgbify=Trueの場合、terrainRGBも作成
+        """
         data_for_geotiff = self.make_data_for_geotiff()
 
         geotiff = Geotiff(*data_for_geotiff)
 
-        geotiff.write_geotiff()
+        geotiff.write(1, gdal.GDT_Float32)
 
         if not self.output_epsg == "EPSG:4326":
             geotiff.resampling(epsg=self.output_epsg)
 
         if self.rgbify:
-            self.dem_to_terrain_rgb()
+            geotiff.write(
+                3,
+                gdal.GDT_Byte,
+                file_name="rgbify.tif",
+                rgbify=self.rgbify
+            )
+
+            if not self.output_epsg == "EPSG:4326":
+                geotiff.resampling(epsg=self.output_epsg, file_name="rgbify.tif")
