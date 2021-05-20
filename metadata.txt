@@ -16,8 +16,8 @@ email=nishio@mierune.co.jp
 
 about=基盤地図情報のDEMをGeoTiffに変換して表示します
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/MIERUNE/convert_fgd_dem_to_geotiff/issues
+repository=https://github.com/MIERUNE/convert_fgd_dem_to_geotiff
 # End of mandatory metadata
 
 # Recommended items:
@@ -26,9 +26,9 @@ repository=http://repo
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=python, dem, GeoTiff, Terrain
 
-homepage=http://homepage
+homepage=https://github.com/MIERUNE/convert_fgd_dem_to_geotiff
 category=Plugins
 icon=icon.png
 # experimental flag
