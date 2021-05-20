@@ -1,6 +1,7 @@
 # convert_fgd_dem_to_geotiff
 
 ## Overview
+![](./img/1.gif)
 
 This is QGIS plugin to convert DEM ("xml" or "folder containing .xml" or ".zip containing .xml") to GeoTiff and Terrain RGB (Tiff).
 
