@@ -36,6 +36,7 @@ class ConvertDEMtoGeotiffContents:
             self.dlg.comboBox.addItem(key, input_type[key])
         self.dlg.comboBox.activated.connect(self.switch_input_type)
 
+        self.dlg.mQgsProjectionSelectionWidget.setCrs(QgsProject.instance().crs())
         output_type = {
             'only GeoTiff': 1,
             'GeoTiff & Terrain RGB': 2,
