@@ -54,11 +54,13 @@ class ConvertDEMtoGeotiffContents:
         # 選択したフォルダのパスを取得
         self.import_path = self.dlg.mQgsFileWidget_1.filePath()
         self.geotiff_output_path = self.dlg.mQgsFileWidget_2.filePath()
+        self.output_epsg = self.dlg.mQgsProjectionSelectionWidget.crs().authid()
 
         rgbify = self.dlg.comboBox_2.currentIndex()
         converter = Converter(
             import_path=self.import_path,
             output_path=self.geotiff_output_path,
+            output_epsg=self.output_epsg,
             rgbify=rgbify
         )
         converter.dem_to_geotiff()
