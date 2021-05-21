@@ -27,12 +27,10 @@ import os
 from PyQt5 import uic
 from PyQt5 import QtWidgets
 
-# This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'convert_dem_to_geotiff_dialog_base.ui'))
+from .ui_convert_dem_to_geotiff import Ui_ConvertDEMtoGeoTiffDialogBase
 
 
-class ConvertDEMtoGeoTiffDialog(QtWidgets.QDialog, FORM_CLASS):
+class ConvertDEMtoGeoTiffDialog(QtWidgets.QDialog, Ui_ConvertDEMtoGeoTiffDialogBase):
     def __init__(self, parent=None):
         """Constructor."""
         super(ConvertDEMtoGeoTiffDialog, self).__init__(parent)
