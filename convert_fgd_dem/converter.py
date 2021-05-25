@@ -18,8 +18,8 @@ class Converter:
         """Initializer
 
         Args:
-            import_path (str): string of import path
-            output_path (str): string of output path
+            import_path (str): string of file import path
+            output_path (str): string of file output path
             output_epsg (str): string of output epsg
             rgbify (bool): whether to generate TerrainRGB or not
 
@@ -165,13 +165,13 @@ class Converter:
         data_for_geotiff = self.make_data_for_geotiff()
 
         geotiff = Geotiff(*data_for_geotiff)
-        geotiff.generate(1, gdal.GDT_Float32)
+        geotiff.create(1, gdal.GDT_Float32)
 
         if not self.output_epsg == "EPSG:4326":
             geotiff.resampling(epsg=self.output_epsg)
 
         if self.rgbify:
-            geotiff.generate(
+            geotiff.create(
                 3,
                 gdal.GDT_Byte,
                 file_name="rgbify.tif",

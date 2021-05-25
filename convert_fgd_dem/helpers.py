@@ -8,15 +8,14 @@ def warp(
         epsg="EPSG:3857",
         no_data_value="None"):
     """
-    EPSG:4326のTiffから新たなGeoTiffを出力する
+    Create new GeoTiff from EPSG: 4326 Tiff
 
     Args:
-        source_path (Path or None):
-        file_name (str):
-        output_path (Path or None):
-        epsg (str):
-        no_data_value (int):
-
+        source_path (Path or None): Path object of source file
+        file_name (str): string of file name
+        output_path (Path or None): Path object of file output path
+        epsg (str): string of epsg
+        no_data_value (int): integer of no data value
     """
 
     if not output_path.exists():
@@ -42,8 +41,14 @@ def warp(
 
 
 def convert_height_to_R(height, no_data_value=-9999):
+    """
+    Convert height to R value of RGB
+
+    Args:
+        height (int): integer of height
+    """
     if height == no_data_value:
-        # nodataを標高値0として計算
+        # Calculate with nodata as elevation value 0
         return 1
     r_min_height = 65536
     offset_height = int(height * 10) + 100000
@@ -51,8 +56,14 @@ def convert_height_to_R(height, no_data_value=-9999):
 
 
 def convert_height_to_G(height, r_value, no_data_value=-9999):
+    """
+    Convert height to G value of RGB
+
+    Args:
+        height (int): integer of height
+    """
     if height == no_data_value:
-        # nodataを標高値0として計算
+        # Calculate with nodata as elevation value 0
         return 134
     r_min_height = 65536
     g_min_height = 256
@@ -61,8 +72,14 @@ def convert_height_to_G(height, r_value, no_data_value=-9999):
 
 
 def convert_height_to_B(height, r_value, g_value, no_data_value=-9999):
+    """
+    Convert height to B value of RGB
+
+    Args:
+        height (int): integer of height
+    """
     if height == no_data_value:
-        # nodataを標高値0として計算
+        # Calculate with nodata as elevation value 0
         return 160
     r_min_height = 65536
     g_min_height = 256

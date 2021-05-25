@@ -29,7 +29,7 @@ from PyQt5.QtWidgets import QAction
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
-from .convert_dem_to_geoTiff_contents import ConvertDEMtoGeotiffContents
+from .convert_dem_to_geotiff_contents import ConvertDEMtoGeotiffContents
 
 import os.path
 
