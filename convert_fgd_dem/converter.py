@@ -8,16 +8,25 @@ from .geotiff import Geotiff
 
 
 class Converter:
-    # todo:terrain-rgbを吐き出すかどうかのオプションをつける
-    # todo:投影変換するかどうかのオプションをつける
-    # todo:吐き出すtiffは一つになるようにする
-    # todo:import_epsgは必ず"EPSG:4326"だと思うので引数から外す
+
     def __init__(
             self,
             import_path,
             output_path,
             output_epsg="EPSG:4326",
             rgbify=False):
+        """Initializer
+
+        Args:
+            import_path (str): string of import path
+            output_path (str): string of output path
+            output_epsg (str): string of output epsg
+            rgbify (bool): whether to generate TerrainRGB or not
+
+        Notes:
+            "Meta_data" refers to mesh code, lonlat of the bottom left and top right, grid size, initial position, and pixel size of DEM.
+            "Content" refers to mesh code, metadata, and elevation values.
+        """
         self.import_path: Path = Path(import_path)
         self.output_path: Path = Path(output_path)
         if not output_epsg.startswith("EPSG:"):
@@ -28,11 +37,9 @@ class Converter:
         self.dem = Dem(self.import_path)
 
     def _calc_image_size(self):
-        """Dem境界の緯度経度とピクセルサイズから出力画像の大きさを算出する
-
+        """Calculate the size of the output image from the lonlat of the Dem boundary and the pixel size.
         Returns:
-            tuple: x/y方向の画像の大きさ
-
+            tuple: Image size in x / y direction
         """
         lower_left_lat = self.dem.bounds_latlng["lower_left"]["lat"]
         lower_left_lon = self.dem.bounds_latlng["lower_left"]["lon"]
@@ -55,21 +62,19 @@ class Converter:
         return x_length, y_length
 
     def _combine_meta_data_and_contents(self):
-        """メッシュコードが同一のメタデータと標高値を結合する
+        """Combine metadata and elevation values ​​with the same mesh code
 
         Returns:
-
+            list: Mesh data list
         """
         mesh_data_list = []
 
-        # 辞書のリストをメッシュコードをKeyにしてソート
         sort_metadata_list = sorted(
             self.dem.meta_data_list, key=lambda x: x["mesh_code"]
         )
         sort_contents_list = sorted(
             self.dem.np_array_list, key=lambda x: x["mesh_code"]
         )
-        # メタデータとコンテンツを結合
         for metadata, content in zip(sort_metadata_list, sort_contents_list):
             metadata.update(content)
             mesh_data_list.append(metadata)
@@ -77,21 +82,20 @@ class Converter:
         return mesh_data_list
 
     def make_data_for_geotiff(self):
-        """Demの情報からGeoTiff作成に必要な情報を生成する
+        """Generate the data required to create GeoTiff from Dem information
 
         Returns:
-
+            tuple: Geo transform list, dem numpy array, image size of x, y and output path
         """
-        # 全xmlを包括するグリッドセル数
+        # Number of grid cells including all xml
         image_size = self._calc_image_size()
         x_length = image_size[0]
         y_length = image_size[1]
 
-        # グリッドセルサイズが10000以上なら処理を終了
         if x_length >= 10000 or y_length >= 10000:
             raise Exception(f"セルサイズが大きすぎます。x={x_length}・y={y_length}")
 
-        # 全xmlを包括する配列を作成
+        # Create an array that covers all xml
         dem_array = np.empty((y_length, x_length), np.float32)
         dem_array.fill(-9999)
 
@@ -104,38 +108,35 @@ class Converter:
             - self.dem.bounds_latlng["upper_right"]["lat"]
         ) / y_length
 
-        # メタデータと標高値を結合
+        # Combine metadata and elevation values
         data_list = self._combine_meta_data_and_contents()
 
-        # メッシュのメッシュコードを取り出す
         for data in data_list:
-            # 読み込んだarrayの左下の座標を取得
+            # Get the bottom left coordinates of the read array
             lower_left_lat = data["lower_corner"]["lat"]
             lower_left_lon = data["lower_corner"]["lon"]
 
-            # (0, 0)からの距離を算出
+            # Calculate the distance from (0, 0)
             lat_distance = lower_left_lat - \
                 self.dem.bounds_latlng["lower_left"]["lat"]
             lon_distance = lower_left_lon - \
                 self.dem.bounds_latlng["lower_left"]["lon"]
 
-            # numpy上の座標を取得(ピクセルサイズが少数のため誤差が出るから四捨五入)
+            # Get coordinates on numpy (Rounded off to eliminate errors)
             x_coordinate = round(lon_distance / x_pixel_size)
             y_coordinate = round(lat_distance / (-y_pixel_size))
 
-            # グリッドセルサイズ
             x_len = data["grid_length"]["x"]
             y_len = data["grid_length"]["y"]
 
-            # スライスで指定する範囲を算出
             row_start = int(y_length - (y_coordinate + y_len))
             row_end = int(row_start + y_len)
             column_start = int(x_coordinate)
             column_end = int(column_start + x_len)
 
-            # データから標高値の配列を取得
+            # Get an array of elevation values ​​from the data
             np_array = data["np_array"]
-            # スライスで大きい配列に代入
+            # Assign to a large array
             dem_array[row_start:row_end, column_start:column_end] = np_array
 
         geo_transform = [
@@ -158,20 +159,19 @@ class Converter:
 
     def dem_to_geotiff(self):
         """
-        処理を一括で行い、選択されたディレクトリに入っているxmlをGeoTiffにコンバートして指定したディレクトリに吐き出す
-        rgbify=Trueの場合、terrainRGBも作成
+        Convert the xml(dem) in the selected directory to GeoTiff and store it in the specified directory
+        If value of rgbify is True, also generate terrainRGB
         """
         data_for_geotiff = self.make_data_for_geotiff()
 
         geotiff = Geotiff(*data_for_geotiff)
-
-        geotiff.write(1, gdal.GDT_Float32)
+        geotiff.generate(1, gdal.GDT_Float32)
 
         if not self.output_epsg == "EPSG:4326":
             geotiff.resampling(epsg=self.output_epsg)
 
         if self.rgbify:
-            geotiff.write(
+            geotiff.generate(
                 3,
                 gdal.GDT_Byte,
                 file_name="rgbify.tif",

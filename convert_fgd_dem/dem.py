@@ -8,18 +8,17 @@ import numpy as np
 
 
 class Dem:
-    """DEMのxmlからメタデータを取り出すクラス"""
+    """Retrieve metadata from DEM xml"""
 
     def __init__(self, import_path):
-        """イニシャライザ
+        """Initializer
 
         Args:
-            import_path (Path): 取り込み対象のパスオブジェクト
+            import_path (Path): Path object of import path
 
         Notes:
-            「meta_data」とはDEMを構成する「メッシュコード・左下と右上の緯度経度・グリッドサイズ・初期位置・ピクセルサイズ」のことを指す
-            「content」とはメッシュコード・メタデータ・標高値のことを指す
-
+            "Meta_data" refers to mesh code, lonlat of the bottom left and top right, grid size, initial position, and pixel size of DEM.
+            "Content" refers to mesh code, metadata, and elevation values.
         """
         self.import_path: Path = import_path
         self.xml_paths: list = self._get_xml_paths()
@@ -36,25 +35,23 @@ class Dem:
         self._store_bounds_latlng()
 
     def _unzip_dem(self, dest_dir):
-        """DEMが格納されたzipファイルを解凍する
+        """Unzip the zip file containing the DEM
 
         Args:
-            dest_dir (Path): 解凍先のディレクトリパス
-
+            dest_dir (Path): Path object of unzip directory
         """
         with zipfile.ZipFile(self.import_path, "r") as zip_data:
-            # 圧縮のされ方が違うため（？）、解凍後のフォルダ構成が異なるのでひとまず展開して後ほど移動
             zip_data.extractall(path=dest_dir)
-            # macOSでzip解凍時に作成されるゴミファイルを削除
+            # Delete unnecessary files created when macOS
             garbage_dir = dest_dir / "__MACOSX"
             if garbage_dir.exists():
                 shutil.rmtree(garbage_dir)
 
-            # 解凍後のディレクトリの中に同名ディレクトリが作成されていなければreturn
+            # If the directory with the same name is not created in the unzipped directory, return
             if dest_dir.glob(".xml"):
                 return
 
-            # 作成されていれば、サブディレクトリから取り出す
+            # If not, retrieve it from subdirectory
             for path in zip_data.namelist():
                 if path.endswith(".xml"):
                     try:
@@ -65,15 +62,15 @@ class Dem:
                             f"ファイルの移動をスキップし、オリジナルファイルを削除します：{dest_dir / path}")
                         os.remove(dest_dir / path)
                         continue
-            # 内部に親フォルダと同名ディレクトリが残るので削除
+            # Deleted the directory with the same name as the parent folder
             if (dest_dir / self.import_path.stem).exists():
                 (dest_dir / self.import_path.stem).rmdir()
 
     def _get_xml_paths(self):
-        """指定したパスからxmlのPathオブジェクトのリストを作成
+        """Create a list of xml Path objects from the specified path
 
         Returns:
-            list: xmlのパスを格納したリスト
+            list: List containing xml paths
 
         """
         if self.import_path.is_dir():
@@ -87,7 +84,6 @@ class Dem:
 
         elif self.import_path.suffix == ".zip":
             extract_dir = self.import_path.parent / self.import_path.stem
-            # 指定ディレクトリにunzip
             self._unzip_dem(extract_dir)
             xml_paths = [
                 xml_path for xml_path in extract_dir.glob("*.xml")]
@@ -100,13 +96,13 @@ class Dem:
 
     @staticmethod
     def _format_metadata(raw_metadata):
-        """取得した生のメタデータを整形する
+        """Format the raw metadata
 
         Args:
-            raw_metadata (dict): xmlから取得した生のメタデータが格納された辞書
+            raw_metadata (dict): A dictionary containing raw metadata retrieved from xml
 
         Returns:
-            dict: 加工したメタデータを格納した辞書
+            dict: A dictionary containing processed metadata
 
         """
         lowers = raw_metadata["lower_corner"].split(" ")
@@ -144,14 +140,13 @@ class Dem:
         return meta_data
 
     def get_xml_content(self, xml_path):
-        """xmlを読み込んでメッシュコード・メタデータ・標高値を取得する
+        """Read xml to get mesh code, metadata and elevation value
 
         Args:
-            xml_path (Path):　xmlのパスオブジェクト
+            xml_path (Path): Path object of xml path
 
         Returns:
-            dict: メッシュコード・メタデータ・標高値を格納した辞書
-
+            dict: A dictionary containing mesh code, metadata, and elevation values
         """
         if not xml_path.suffix == ".xml":
             raise Exception("指定できる形式は.xmlのみです")
@@ -196,7 +191,7 @@ class Dem:
             name_space,
         ).text
 
-        # gml:tupleList先頭の改行を削除したのち、[[地表面,354.15]...]のようなlistのlistを作成
+        # Create a two-dimensional array list like [[地表面,354.15]...]
         if tuple_list.startswith("\n"):
             strip_tuple_list = tuple_list.strip()
             items = [item.split(",")[1]
@@ -213,12 +208,12 @@ class Dem:
         }
 
     def _check_mesh_codes(self):
-        """2次メッシュと3次メッシュの重複をチェックする
+        """
+        Check for overlap between secondary and tertiary meshes
 
         Raises:
-            - メッシュコードが6桁 or 8桁以外の場合はエラー
-            - 2次メッシュと3次メッシュが混合している場合にエラー
-
+            - Error if the mesh code is other than 6 or 8 digits
+            - Error when secondary and tertiary meshes are mixed
         """
         third_mesh_codes = []
         second_mesh_codes = []
@@ -237,7 +232,7 @@ class Dem:
             raise Exception("2次メッシュと3次メッシュが混合しています。")
 
     def _get_xml_content_list(self):
-        """xmlのリストを読み込んでメタデータと標高値のリストを作成する"""
+        """Create a list of metadata and elevation values"""
         self.all_content_list = [
             self.get_xml_content(xml_path) for xml_path in self.xml_paths
         ]
@@ -269,14 +264,13 @@ class Dem:
 
     @staticmethod
     def _get_np_array(content):
-        """Demから標高値を取得し、メッシュコードと標高値（np.array）を格納した辞書を返す
+        """Gets the elevation value from Dem and returns the mesh code and elevation value (np.array)
 
         Args:
-            content(dict): DEMの詳細情報が格納された辞書
+            content(dict): Dictionary containing detailed information of DEM
 
         Returns:
-            dict: メッシュコードと標高値（np.array）を格納した辞書
-
+            dict: A dictionary containing mesh code and elevation values (np.array)
         """
         mesh_code = content["mesh_code"]
         meta_data = content["meta_data"]
@@ -285,22 +279,21 @@ class Dem:
         x_length = meta_data["grid_length"]["x"]
         y_length = meta_data["grid_length"]["y"]
 
-        # 標高地を保存するための二次元配列を作成
         array = np.empty((y_length, x_length), np.float32)
         array.fill(-9999)
 
         start_point_x = meta_data["start_point"]["x"]
         start_point_y = meta_data["start_point"]["y"]
 
-        # 標高を格納
-        # データの並びは北西端から南東端に向かっているので行毎に座標を配列に入れていく
+        # Since the data is arranged from the northwest to the southeast,
+        # put the coordinates in the array for each row.
         index = 0
         for y in range(start_point_y, y_length):
             for x in range(start_point_x, x_length):
                 try:
                     insert_value = float(elevation[index])
                     array[y][x] = insert_value
-                # データの行数とグリッドのサイズは必ずしもピッタリ合うわけではないのでインデックスのサイズをはみ出したらループを停止
+                # The number of rows of data and the size of the grid do not always match
                 except IndexError:
                     break
                 index += 1
@@ -311,7 +304,7 @@ class Dem:
         return np_array
 
     def _store_np_array_list(self):
-        """Demからメッシュコードと標高値のnp.arrayを格納した辞書のリストを作成する"""
+        """Create a list of dictionaries containing mesh code and elevation value np.array from Dem"""
         self.np_array_list = [
             self._get_np_array(content) for content in self.all_content_list
         ]
