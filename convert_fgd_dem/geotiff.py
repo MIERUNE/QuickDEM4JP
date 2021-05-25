@@ -48,7 +48,7 @@ class Geotiff:
         dst_ds,
         no_data_value=-9999
     ):
-        """Write numpy array on raster bands 
+        """Write numpy array on raster bands
 
         Args:
             rgbify (bool): whether to generate TerrainRGB or not
