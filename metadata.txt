@@ -12,7 +12,7 @@ qgisMinimumVersion=3.0
 description=DEMをGeoTiffに変換します
 version=0.1
 author=MIERUNE.Inc
-email=nishio@mierune.co.jp
+email=info@mierune.co.jp
 
 about=基盤地図情報のDEMをGeoTiffに変換して表示します
 
