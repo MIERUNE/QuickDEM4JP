@@ -70,16 +70,17 @@ class ConvertDEMtoGeoTiff:
         return QCoreApplication.translate('ConvertDEMtoGeoTiff', message)
 
     def add_action(
-            self,
-            icon_path,
-            text,
-            callback,
-            enabled_flag=True,
-            add_to_menu=True,
-            add_to_toolbar=True,
-            status_tip=None,
-            whats_this=None,
-            parent=None):
+        self,
+        icon_path,
+        text,
+        callback,
+        enabled_flag=True,
+        add_to_menu=True,
+        add_to_toolbar=True,
+        status_tip=None,
+        whats_this=None,
+        parent=None
+    ):
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
