@@ -90,7 +90,7 @@ class Ui_QuickDEMforJPDialogBase(object):
 
     def retranslateUi(self, QuickDEMforJPDialogBase):
         _translate = QtCore.QCoreApplication.translate
-        QuickDEMforJPDialogBase.setWindowTitle(_translate("QuickDEMforJPDialogBase", "Convert_DEM_to_GeoTiff"))
+        QuickDEMforJPDialogBase.setWindowTitle(_translate("QuickDEMforJPDialogBase", "QuickDEMforJP"))
         self.label_1.setText(_translate("QuickDEMforJPDialogBase", "DEM格納先"))
         self.label_2.setText(_translate("QuickDEMforJPDialogBase", "GeoTiff出力フォルダ"))
         self.label_3.setText(_translate("QuickDEMforJPDialogBase", "参照先EPSGコード"))

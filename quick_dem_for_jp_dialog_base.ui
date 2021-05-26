@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Convert_DEM_to_GeoTiff</string>
+   <string>QuickDEMforJP</string>
   </property>
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
