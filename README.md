@@ -1,4 +1,4 @@
-# convert_fgd_dem_to_geotiff
+# QuickDEM4JP
 
 ## Overview
 ![](./img/1.gif)
