@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ConvertDEMtoGeoTiffDialogBase</class>
- <widget class="QDialog" name="ConvertDEMtoGeoTiffDialogBase">
+ <class>QuickDEMforJPDialogBase</class>
+ <widget class="QDialog" name="QuickDEMforJPDialogBase">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -202,7 +202,7 @@
   <connection>
    <sender>button_box</sender>
    <signal>accepted()</signal>
-   <receiver>ConvertDEMtoGeoTiffDialogBase</receiver>
+   <receiver>QuickDEMforJPDialogBase</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -218,7 +218,7 @@
   <connection>
    <sender>button_box</sender>
    <signal>rejected()</signal>
-   <receiver>ConvertDEMtoGeoTiffDialogBase</receiver>
+   <receiver>QuickDEMforJPDialogBase</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
