@@ -12,7 +12,7 @@ from .helpers import (
 
 
 class Geotiff:
-    """GeoTiffを生成するためのクラス"""
+    """Generate GeoTiff"""
 
     def __init__(
             self,
@@ -21,20 +21,19 @@ class Geotiff:
             x_length,
             y_length,
             output_path):
-        """イニシャライザ
+        """Initializer
 
         Args:
-            geo_transform (list): GdalのDatasetクラスでSetGeoTransformするための情報
-            np_array ():
-            x_length (int):
-            y_length (int):
-            output_path (Path):
+            geo_transform (list): Data for SetGeoTransform in Gdal's Dataset class
+            np_array (numpy.ndarray): dem numpy array
+            x_length (int): image size of x
+            y_length (int): iamge size of y
+            output_path (Path): Path object of file output path
 
         Notes:
-            geo_transformは以下のような情報
-                geo_transform = [左上経度・東西解像度・回転（０で南北方向）・左上緯度・回転（０で南北方向）・南北解像度（北南方向であれば負）]
-                                [lower_left_lon, pixel_size_x, 0, upper_right_lat, 0, pixel_size_y]
-
+            The contents of geo_transform list are as follows
+            geo_transform = [Top left longitude, east-west resolution, rotation, top left latitude, rotation, north-south resolution]
+                            [lower_left_lon, pixel_size_x, 0, upper_right_lat, 0, pixel_size_y]
         """
         self.geo_transform = geo_transform
         self.np_array = np_array
@@ -42,20 +41,20 @@ class Geotiff:
         self.y_length = y_length
         self.output_path: Path = output_path
 
-    def make_raster_bands(
+    def write_raster_bands(
         self,
         rgbify,
         band_count,
         dst_ds,
         no_data_value=-9999
     ):
-        """条件に応じてラスターのバンドを作成
+        """Write numpy array on raster bands
 
         Args:
-            rgbify (bool):
-            band_count (int):
-            dst_ds (gdalのドライバ):
-            no_data_value (int):
+            rgbify (bool): whether to generate TerrainRGB or not
+            band_count (int): number of bands
+            dst_ds (gdal.Dataset): gdal Dataset object
+            no_data_value (int): integer of no data value
         """
         if rgbify:
             func_R = np.frompyfunc(convert_height_to_R, 1, 1)
@@ -68,18 +67,16 @@ class Geotiff:
 
             self.np_array = np.array([r_arr, g_arr, b_arr])
 
-            # 3バンドにnumpyのarrayをセット
             for band in range(1, band_count + 1):
                 raster_band = dst_ds.GetRasterBand(band)
                 raster_band.WriteArray(self.np_array[band - 1])
 
         else:
-            # 作成したラスターの第一バンドを取得し、numpyのarrayをセット
             raster_band = dst_ds.GetRasterBand(1)
             raster_band.WriteArray(self.np_array)
             raster_band.SetNoDataValue(no_data_value)
 
-    def write(
+    def create(
         self,
         band_count,
         dtype,
@@ -87,14 +84,14 @@ class Geotiff:
         no_data_value=-9999,
         rgbify=False
     ):
-        """標高と座標、ピクセルサイズ、グリッドサイズからGeoTiffを作成
+        """Create GeoTiff from elevation and coordinates, pixel size, grid size
 
         Args:
-            band_count (int):
-            dtype (gdalのピクセルデータタイプ):
-            file_name (str):
-            no_data_value (int):
-            rgbify (bool):
+            band_count (int): number of bands
+            dtype (int): integer of gdal data type
+            file_name (str): output file name
+            no_data_value (int): integer of no data value
+            rgbify (bool): whether to generate TerrainRGB or not
         """
         if not self.output_path.exists():
             self.output_path.mkdir()
@@ -110,7 +107,7 @@ class Geotiff:
         )
         dst_ds.SetGeoTransform(self.geo_transform)
 
-        self.make_raster_bands(
+        self.write_raster_bands(
             rgbify,
             band_count,
             dst_ds,
@@ -121,7 +118,6 @@ class Geotiff:
         ref.ImportFromEPSG(4326)
         dst_ds.SetProjection(ref.ExportToWkt())
 
-        # ディスクへの書き出し
         dst_ds.FlushCache()
 
     def resampling(
@@ -130,14 +126,13 @@ class Geotiff:
             file_name="output.tif",
             epsg="EPSG:3857",
             no_data_value=-9999):
-        """EPSG:4326のTiffから新たなGeoTiffを出力する
+        """Create new GeoTiff from EPSG: 4326 Tiff
 
         Args:
-            source_path (Path):
-            file_name (str):
-            epsg (str):
-            no_data_value (int):
-
+            source_path (Path): Path object of source file
+            file_name (str): string of file name
+            epsg (str): string of epsg
+            no_data_value (int): integer of no data value
         """
         if source_path is None:
             source_path = self.output_path / file_name
