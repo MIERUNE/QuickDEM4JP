@@ -16,8 +16,8 @@ email=nishio@mierune.co.jp
 
 about=基盤地図情報のDEMをGeoTiffに変換して表示します
 
-tracker=https://github.com/MIERUNE/convert_fgd_dem_to_geotiff/issues
-repository=https://github.com/MIERUNE/convert_fgd_dem_to_geotiff
+tracker=https://github.com/MIERUNE/QuickDEM4JP/issues
+repository=https://github.com/MIERUNE/QuickDEM4JP
 # End of mandatory metadata
 
 # Recommended items:
@@ -28,7 +28,7 @@ repository=https://github.com/MIERUNE/convert_fgd_dem_to_geotiff
 # Tags are comma separated with spaces allowed
 tags=python, dem, GeoTiff, Terrain
 
-homepage=https://github.com/MIERUNE/convert_fgd_dem_to_geotiff
+homepage=https://github.com/MIERUNE/QuickDEM4JP
 category=Plugins
 icon=icon.png
 # experimental flag
@@ -36,4 +36,3 @@ experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
-
