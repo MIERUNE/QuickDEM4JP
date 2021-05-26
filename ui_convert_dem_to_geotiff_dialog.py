@@ -90,25 +90,9 @@ class Ui_ConvertDEMtoGeoTiffDialogBase(object):
 
     def retranslateUi(self, ConvertDEMtoGeoTiffDialogBase):
         _translate = QtCore.QCoreApplication.translate
-        ConvertDEMtoGeoTiffDialogBase.setWindowTitle(_translate(
-            "ConvertDEMtoGeoTiffDialogBase", "Convert_DEM_to_GeoTiff"))
-        self.label_1.setText(
-            _translate(
-                "ConvertDEMtoGeoTiffDialogBase",
-                "DEM格納先"))
-        self.label_2.setText(
-            _translate(
-                "ConvertDEMtoGeoTiffDialogBase",
-                "GeoTiff出力フォルダ"))
-        self.label_3.setText(
-            _translate(
-                "ConvertDEMtoGeoTiffDialogBase",
-                "参照先EPSGコード"))
-        self.label_4.setText(
-            _translate(
-                "ConvertDEMtoGeoTiffDialogBase",
-                "DEM入力形式"))
-        self.label_5.setText(
-            _translate(
-                "ConvertDEMtoGeoTiffDialogBase",
-                "出力形式"))
+        ConvertDEMtoGeoTiffDialogBase.setWindowTitle(_translate("ConvertDEMtoGeoTiffDialogBase", "Convert_DEM_to_GeoTiff"))
+        self.label_1.setText(_translate("ConvertDEMtoGeoTiffDialogBase", "DEM格納先"))
+        self.label_2.setText(_translate("ConvertDEMtoGeoTiffDialogBase", "GeoTiff出力フォルダ"))
+        self.label_3.setText(_translate("ConvertDEMtoGeoTiffDialogBase", "参照先EPSGコード"))
+        self.label_4.setText(_translate("ConvertDEMtoGeoTiffDialogBase", "DEM入力形式"))
+        self.label_5.setText(_translate("ConvertDEMtoGeoTiffDialogBase", "出力形式"))
