@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/plugins/convert_dem_to_geotiff" >
+    <qresource prefix="/plugins/QuickDEM4JP" >
         <file>icon.png</file>
     </qresource>
 </RCC>
