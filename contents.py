@@ -42,6 +42,8 @@ class Contents:
         self.dlg.mQgsFileWidget_1.setFilePath(self.current_dir)
         self.dlg.mQgsFileWidget_2.setFilePath(self.current_dir)
         self.dlg.mQgsFileWidget_2.setStorageMode(QgsFileWidget.GetDirectory)
+        self.dlg.checkBox.setChecked(True)
+        self.dlg.checkBox_3.setChecked(True)
         self.dlg.mQgsProjectionSelectionWidget.setCrs(QgsProject.instance().crs())
 
         input_type = {
@@ -52,36 +54,42 @@ class Contents:
             self.dlg.comboBox.addItem(key, input_type[key])
         self.dlg.comboBox.activated.connect(self.switch_input_type)
 
-        output_type = {
-            'only GeoTiff': 1,
-            'GeoTiff & Terrain RGB': 2,
-        }
-        for key in output_type:
-            self.dlg.comboBox_2.addItem(key, output_type[key])
-
         self.dlg.button_box.accepted.connect(self.convert_DEM)
         self.dlg.button_box.rejected.connect(self.dlg_cancel)
 
-    def convert_DEM(self):
-        self.import_path = self.dlg.mQgsFileWidget_1.filePath()
-        self.geotiff_output_path = self.dlg.mQgsFileWidget_2.filePath()
-        self.output_epsg = self.dlg.mQgsProjectionSelectionWidget.crs().authid()
-        self.rgbify = self.dlg.comboBox_2.currentIndex()
-
+    def convert(self, rgbify):
         converter = Converter(
             import_path=self.import_path,
             output_path=self.geotiff_output_path,
             output_epsg=self.output_epsg,
-            rgbify=self.rgbify
+            rgbify=rgbify
         )
         converter.dem_to_geotiff()
 
-        output_layer = QgsRasterLayer(os.path.join(self.geotiff_output_path, 'output.tif'), 'output')
-        QgsProject.instance().addMapLayer(output_layer)
+    def add_layer(self, tiff_name, layer_name):
+        layer = QgsRasterLayer(os.path.join(self.geotiff_output_path, tiff_name), layer_name)
+        QgsProject.instance().addMapLayer(layer) 
 
-        if self.rgbify:
-            rgbify_layer = QgsRasterLayer(os.path.join(self.geotiff_output_path, 'rgbify.tif'), 'rgbify')
-            QgsProject.instance().addMapLayer(rgbify_layer)
+    def convert_DEM(self):
+        do_GeoTiff = self.dlg.checkBox.isChecked()
+        do_TerrainRGB = self.dlg.checkBox_2.isChecked()
+        do_add_layer = self.dlg.checkBox_3.isChecked()
+        if not do_GeoTiff and not do_TerrainRGB:
+            return
+
+        self.import_path = self.dlg.mQgsFileWidget_1.filePath()
+        self.geotiff_output_path = self.dlg.mQgsFileWidget_2.filePath()
+        self.output_epsg = self.dlg.mQgsProjectionSelectionWidget.crs().authid()
+
+        if do_GeoTiff:
+            self.convert(rgbify=False)
+            if do_add_layer:
+                self.add_layer('output.tif', 'output')
+
+        if do_TerrainRGB:
+            self.convert(rgbify=True)
+            if do_add_layer:
+                self.add_layer('rgbify.tif', 'rgbify')
 
         return True
 
