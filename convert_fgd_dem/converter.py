@@ -165,18 +165,22 @@ class Converter:
         data_for_geotiff = self.make_data_for_geotiff()
 
         geotiff = Geotiff(*data_for_geotiff)
-        geotiff.create(1, gdal.GDT_Float32)
-
-        if not self.output_epsg == "EPSG:4326":
-            geotiff.resampling(epsg=self.output_epsg)
 
         if self.rgbify:
             geotiff.create(
                 3,
                 gdal.GDT_Byte,
                 file_name="rgbify.tif",
+                no_data_value=None,
                 rgbify=self.rgbify
             )
-
             if not self.output_epsg == "EPSG:4326":
-                geotiff.resampling(epsg=self.output_epsg, file_name="rgbify.tif")
+                geotiff.resampling(
+                    epsg=self.output_epsg,
+                    file_name="rgbify.tif",
+                    no_data_value=None
+                )
+        else:
+            geotiff.create(1, gdal.GDT_Float32)
+            if not self.output_epsg == "EPSG:4326":
+                geotiff.resampling(epsg=self.output_epsg)
