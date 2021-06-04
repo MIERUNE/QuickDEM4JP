@@ -39,20 +39,17 @@ class Contents:
         self.dlg = QuickDEMforJPDialog()
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
 
-        self.dlg.mQgsFileWidget_1.setFilePath(self.current_dir)
-        self.dlg.mQgsFileWidget_2.setFilePath(self.current_dir)
-        self.dlg.mQgsFileWidget_2.setStorageMode(QgsFileWidget.GetDirectory)
-        self.dlg.checkBox.setChecked(True)
-        self.dlg.checkBox_3.setChecked(True)
-        self.dlg.mQgsProjectionSelectionWidget.setCrs(QgsProject.instance().crs())
+        self.dlg.mQgsFileWidget_inputPath.setFilePath(self.current_dir)
+        self.dlg.mQgsFileWidget_outputPath.setFilePath(self.current_dir)
+        self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(QgsProject.instance().crs())
 
         input_type = {
             'zip or xml': 1,
             'folder': 2,
         }
         for key in input_type:
-            self.dlg.comboBox.addItem(key, input_type[key])
-        self.dlg.comboBox.activated.connect(self.switch_input_type)
+            self.dlg.comboBox_inputType.addItem(key, input_type[key])
+        self.dlg.comboBox_inputType.activated.connect(self.switch_input_type)
 
         self.dlg.button_box.accepted.connect(self.convert_DEM)
         self.dlg.button_box.rejected.connect(self.dlg_cancel)
@@ -71,15 +68,15 @@ class Contents:
         QgsProject.instance().addMapLayer(layer) 
 
     def convert_DEM(self):
-        do_GeoTiff = self.dlg.checkBox.isChecked()
-        do_TerrainRGB = self.dlg.checkBox_2.isChecked()
-        do_add_layer = self.dlg.checkBox_3.isChecked()
+        do_GeoTiff = self.dlg.checkBox_outputGeoTiff.isChecked()
+        do_TerrainRGB = self.dlg.checkBox_outputTerrainRGB.isChecked()
+        do_add_layer = self.dlg.checkBox_openLayers.isChecked()
         if not do_GeoTiff and not do_TerrainRGB:
             return
 
-        self.import_path = self.dlg.mQgsFileWidget_1.filePath()
-        self.geotiff_output_path = self.dlg.mQgsFileWidget_2.filePath()
-        self.output_epsg = self.dlg.mQgsProjectionSelectionWidget.crs().authid()
+        self.import_path = self.dlg.mQgsFileWidget_inputPath.filePath()
+        self.geotiff_output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
+        self.output_epsg = self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
 
         if do_GeoTiff:
             self.convert(rgbify=False)
@@ -90,6 +87,9 @@ class Contents:
             self.convert(rgbify=True)
             if do_add_layer:
                 self.add_layer('rgbify.tif', 'rgbify')
+        
+        QMessageBox.information(None, '完了', u'処理が完了しました')
+        self.dlg.hide()
 
         return True
 
@@ -97,8 +97,8 @@ class Contents:
         self.dlg.hide()
 
     def switch_input_type(self):
-        if self.dlg.comboBox.currentData() == 1:
-            self.dlg.mQgsFileWidget_1.setStorageMode(QgsFileWidget.GetMultipleFiles)
+        if self.dlg.comboBox_inputType.currentData() == 1:
+            self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetMultipleFiles)
         else:
-            self.dlg.mQgsFileWidget_1.setStorageMode(QgsFileWidget.GetDirectory)
+            self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetDirectory)
 

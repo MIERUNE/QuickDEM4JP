@@ -22,13 +22,16 @@
  ***************************************************************************/
 """
 
+import os
 
+from PyQt5 import uic
 from PyQt5 import QtWidgets
 
-from .ui_quick_dem_for_jp_dialog_base import Ui_QuickDEMforJPDialogBase
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'quick_dem_for_jp_dialog_base.ui'))
 
 
-class QuickDEMforJPDialog(QtWidgets.QDialog, Ui_QuickDEMforJPDialogBase):
+class QuickDEMforJPDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(QuickDEMforJPDialog, self).__init__(parent)

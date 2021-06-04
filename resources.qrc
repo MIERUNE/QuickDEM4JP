@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/QuickDEM4JP" >
-        <file>icon.png</file>
-    </qresource>
-</RCC>
