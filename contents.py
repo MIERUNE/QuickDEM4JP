@@ -41,6 +41,7 @@ class Contents:
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
 
         self.dlg.mQgsFileWidget_inputPath.setFilePath(self.current_dir)
+        self.dlg.mQgsFileWidget_inputPath.setFilter("*.xml;;*.zip")
         self.dlg.mQgsFileWidget_outputPath.setFilePath(self.current_dir)
         self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(QgsProject.instance().crs())
 
