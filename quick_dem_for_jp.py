@@ -26,8 +26,6 @@ from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction
 
-# Initialize Qt resources from file resources.py
-from .resources import *
 # Import the code for the dialog
 from .contents import Contents
 
@@ -42,6 +40,7 @@ class QuickDEMforJP:
         self.iface = iface
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
+        self.icon_path = os.path.join(self.plugin_dir, 'icon.png')
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
         locale_path = os.path.join(
@@ -109,9 +108,8 @@ class QuickDEMforJP:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/QuickDEM4JP/icon.png'
         self.add_action(
-            icon_path,
+            self.icon_path,
             text=self.tr(u'Quick_DEM_for_JP'),
             callback=self.dialog_show,
             parent=self.iface.mainWindow())
