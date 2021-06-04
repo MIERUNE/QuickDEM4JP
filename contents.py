@@ -22,6 +22,7 @@
 """
 
 import os
+import xml.etree.ElementTree as et
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -40,6 +41,7 @@ class Contents:
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
 
         self.dlg.mQgsFileWidget_inputPath.setFilePath(self.current_dir)
+        self.dlg.mQgsFileWidget_inputPath.setFilter("*.xml;;*.zip")
         self.dlg.mQgsFileWidget_outputPath.setFilePath(self.current_dir)
         self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(QgsProject.instance().crs())
 
@@ -71,23 +73,31 @@ class Contents:
         do_GeoTiff = self.dlg.checkBox_outputGeoTiff.isChecked()
         do_TerrainRGB = self.dlg.checkBox_outputTerrainRGB.isChecked()
         do_add_layer = self.dlg.checkBox_openLayers.isChecked()
+
         if not do_GeoTiff and not do_TerrainRGB:
+            QMessageBox.information(None, 'エラー', u'出力形式にチェックを入れてください')
             return
 
         self.import_path = self.dlg.mQgsFileWidget_inputPath.filePath()
         self.geotiff_output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
         self.output_epsg = self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
 
-        if do_GeoTiff:
-            self.convert(rgbify=False)
-            if do_add_layer:
-                self.add_layer('output.tif', 'output')
+        try:
+            if do_GeoTiff:
+                self.convert(rgbify=False)
+                if do_add_layer:
+                    self.add_layer('output.tif', 'output')
+            if do_TerrainRGB:
+                self.convert(rgbify=True)
+                if do_add_layer:
+                    self.add_layer('rgbify.tif', 'rgbify')
+        except (ValueError, AttributeError, et.ParseError):
+            QMessageBox.information(None, 'エラー', u'処理中にエラーが発生しました。DEMが正しいか確認してください')
+            return
+        except Exception as e:
+            QMessageBox.information(None, 'エラー', f'{e}')
+            return
 
-        if do_TerrainRGB:
-            self.convert(rgbify=True)
-            if do_add_layer:
-                self.add_layer('rgbify.tif', 'rgbify')
-        
         QMessageBox.information(None, '完了', u'処理が完了しました')
         self.dlg.hide()
 
