@@ -38,16 +38,15 @@ class Contents:
     def __init__(self, iface):
         self.iface = iface
         self.dlg = QuickDEMforJPDialog()
-        self.current_dir = os.path.dirname(os.path.abspath(__file__))
 
-        self.dlg.mQgsFileWidget_inputPath.setFilePath(self.current_dir)
+        self.dlg.mQgsFileWidget_inputPath.setFilePath(QgsProject.instance().homePath())
         self.dlg.mQgsFileWidget_inputPath.setFilter("*.xml;;*.zip")
-        self.dlg.mQgsFileWidget_outputPath.setFilePath(self.current_dir)
+        self.dlg.mQgsFileWidget_outputPath.setFilePath(QgsProject.instance().homePath())
         self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(QgsProject.instance().crs())
 
         input_type = {
-            'zip or xml': 1,
-            'folder': 2,
+            "'xml'  または  'xml'を含む'zip'": 1,
+            "'xml'を含むフォルダ'": 2,
         }
         for key in input_type:
             self.dlg.comboBox_inputType.addItem(key, input_type[key])
