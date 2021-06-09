@@ -80,7 +80,7 @@ class Geotiff:
         self,
         band_count,
         dtype,
-        file_name="output.tif",
+        file_name,
         no_data_value=-9999,
         rgbify=False
     ):
@@ -122,15 +122,15 @@ class Geotiff:
 
     def resampling(
             self,
+            file_name,
             source_path=None,
-            file_name="output.tif",
             epsg="EPSG:3857",
             no_data_value=-9999):
         """Create new GeoTiff from EPSG: 4326 Tiff
 
         Args:
-            source_path (Path): Path object of source file
             file_name (str): string of file name
+            source_path (Path): Path object of source file
             epsg (str): string of epsg
             no_data_value (int): integer of no data value
         """
