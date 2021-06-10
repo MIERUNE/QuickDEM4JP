@@ -102,8 +102,8 @@ class Contents:
                 self.convert(rgbify=True)
                 if do_add_layer:
                     self.add_layer(
-                        f'rgbify-{os.path.basename(self.output_path)}',
-                        f'rgbify-{os.path.splitext(os.path.basename(self.output_path))[0]}'
+                        f'{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}',
+                        f'{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB'
                     )
         except (ValueError, AttributeError, et.ParseError):
             QMessageBox.information(None, 'エラー', u'処理中にエラーが発生しました。DEMが正しいか確認してください')

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import numpy as np
@@ -170,16 +171,17 @@ class Converter:
         geotiff = Geotiff(*data_for_geotiff)
 
         if self.rgbify:
+            root, ext = os.path.splitext(self.file_name)
             geotiff.create(
                 3,
                 gdal.GDT_Byte,
-                file_name=f'rgbify-{self.file_name}',
+                file_name=f'{root}_Terrain-RGB{ext}',
                 no_data_value=None,
                 rgbify=self.rgbify
             )
             if not self.output_epsg == "EPSG:4326":
                 geotiff.resampling(
-                    file_name=f'rgbify-{self.file_name}',
+                    file_name=f'{root}_Terrain-RGB{ext}',
                     epsg=self.output_epsg,
                     no_data_value=None
                 )
