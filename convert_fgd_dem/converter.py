@@ -175,13 +175,13 @@ class Converter:
             geotiff.create(
                 3,
                 gdal.GDT_Byte,
-                file_name=f'{root}_Terrain-RGB{ext}',
+                file_name=self.file_name,
                 no_data_value=None,
                 rgbify=self.rgbify
             )
             if not self.output_epsg == "EPSG:4326":
                 geotiff.resampling(
-                    file_name=f'{root}_Terrain-RGB{ext}',
+                    file_name=self.file_name,
                     epsg=self.output_epsg,
                     no_data_value=None
                 )
