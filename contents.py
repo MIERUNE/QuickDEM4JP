@@ -41,7 +41,12 @@ class Contents:
 
         self.dlg.mQgsFileWidget_inputPath.setFilePath(QgsProject.instance().homePath())
         self.dlg.mQgsFileWidget_inputPath.setFilter("*.xml;;*.zip")
+
         self.dlg.mQgsFileWidget_outputPath.setFilePath(QgsProject.instance().homePath())
+        self.dlg.mQgsFileWidget_outputPath.setStorageMode(QgsFileWidget.StorageMode.SaveFile)
+        self.dlg.mQgsFileWidget_outputPath.setFilter("*.tiff")
+        self.dlg.mQgsFileWidget_outputPath.setDialogTitle("保存ファイルを選択してください")
+
         self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(QgsProject.instance().crs())
 
         input_type = {
@@ -58,15 +63,19 @@ class Contents:
     def convert(self, rgbify):
         converter = Converter(
             import_path=self.import_path,
-            output_path=self.geotiff_output_path,
+            output_path=os.path.dirname(self.output_path),
             output_epsg=self.output_epsg,
+            file_name=os.path.basename(self.output_path),
             rgbify=rgbify
         )
         converter.dem_to_geotiff()
 
     def add_layer(self, tiff_name, layer_name):
-        layer = QgsRasterLayer(os.path.join(self.geotiff_output_path, tiff_name), layer_name)
-        QgsProject.instance().addMapLayer(layer) 
+        layer = QgsRasterLayer(
+            os.path.join(os.path.dirname(self.output_path), tiff_name),
+            layer_name
+        )
+        QgsProject.instance().addMapLayer(layer)
 
     def convert_DEM(self):
         do_GeoTiff = self.dlg.checkBox_outputGeoTiff.isChecked()
@@ -78,18 +87,24 @@ class Contents:
             return
 
         self.import_path = self.dlg.mQgsFileWidget_inputPath.filePath()
-        self.geotiff_output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
+        self.output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
         self.output_epsg = self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
 
         try:
             if do_GeoTiff:
                 self.convert(rgbify=False)
                 if do_add_layer:
-                    self.add_layer('output.tif', 'output')
+                    self.add_layer(
+                        os.path.basename(self.output_path),
+                        os.path.splitext(os.path.basename(self.output_path))[0]
+                    )
             if do_TerrainRGB:
                 self.convert(rgbify=True)
                 if do_add_layer:
-                    self.add_layer('rgbify.tif', 'rgbify')
+                    self.add_layer(
+                        f'{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}',
+                        f'{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB'
+                    )
         except (ValueError, AttributeError, et.ParseError):
             QMessageBox.information(None, 'エラー', u'処理中にエラーが発生しました。DEMが正しいか確認してください')
             return

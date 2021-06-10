@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import numpy as np
@@ -14,6 +15,7 @@ class Converter:
             import_path,
             output_path,
             output_epsg="EPSG:4326",
+            file_name='output.tif',
             rgbify=False):
         """Initializer
 
@@ -21,6 +23,7 @@ class Converter:
             import_path (str): string of file import path
             output_path (str): string of file output path
             output_epsg (str): string of output epsg
+            file_name (str): string of output filename
             rgbify (bool): whether to generate TerrainRGB or not
 
         Notes:
@@ -32,6 +35,7 @@ class Converter:
         if not output_epsg.startswith("EPSG:"):
             raise Exception("EPSGコードの指定が不正です。EPSG:〇〇の形式で入力してください")
         self.output_epsg: str = output_epsg
+        self.file_name: str = file_name
         self.rgbify: bool = rgbify
 
         self.dem = Dem(self.import_path)
@@ -167,20 +171,28 @@ class Converter:
         geotiff = Geotiff(*data_for_geotiff)
 
         if self.rgbify:
+            root, ext = os.path.splitext(self.file_name)
             geotiff.create(
                 3,
                 gdal.GDT_Byte,
-                file_name="rgbify.tif",
+                file_name=f'{root}_Terrain-RGB{ext}',
                 no_data_value=None,
                 rgbify=self.rgbify
             )
             if not self.output_epsg == "EPSG:4326":
                 geotiff.resampling(
+                    file_name=f'{root}_Terrain-RGB{ext}',
                     epsg=self.output_epsg,
-                    file_name="rgbify.tif",
                     no_data_value=None
                 )
         else:
-            geotiff.create(1, gdal.GDT_Float32)
+            geotiff.create(
+                1,
+                gdal.GDT_Float32,
+                file_name=self.file_name
+            )
             if not self.output_epsg == "EPSG:4326":
-                geotiff.resampling(epsg=self.output_epsg)
+                geotiff.resampling(
+                    file_name=self.file_name,
+                    epsg=self.output_epsg,
+                )
