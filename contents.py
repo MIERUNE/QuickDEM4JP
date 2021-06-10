@@ -60,12 +60,12 @@ class Contents:
         self.dlg.button_box.accepted.connect(self.convert_DEM)
         self.dlg.button_box.rejected.connect(self.dlg_cancel)
 
-    def convert(self, rgbify):
+    def convert(self, filename, rgbify):
         converter = Converter(
             import_path=self.import_path,
             output_path=os.path.dirname(self.output_path),
             output_epsg=self.output_epsg,
-            file_name=os.path.basename(self.output_path),
+            file_name=filename,
             rgbify=rgbify
         )
         converter.dem_to_geotiff()
@@ -92,18 +92,26 @@ class Contents:
 
         try:
             if do_GeoTiff:
-                self.convert(rgbify=False)
+                filename = os.path.basename(self.output_path)
+                self.convert(
+                    filename=filename,
+                    rgbify=False
+                )
                 if do_add_layer:
                     self.add_layer(
-                        os.path.basename(self.output_path),
-                        os.path.splitext(os.path.basename(self.output_path))[0]
+                        tiff_name=filename,
+                        layer_name=os.path.splitext(filename)[0]
                     )
             if do_TerrainRGB:
-                self.convert(rgbify=True)
+                filename = f'{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}'
+                self.convert(
+                    filename=filename,
+                    rgbify=True
+                )
                 if do_add_layer:
                     self.add_layer(
-                        f'{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}',
-                        f'{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB'
+                        tiff_name=filename,
+                        layer_name=f'{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB'
                     )
         except (ValueError, AttributeError, et.ParseError):
             QMessageBox.information(None, 'エラー', u'処理中にエラーが発生しました。DEMが正しいか確認してください')
