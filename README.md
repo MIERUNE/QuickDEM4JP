@@ -13,6 +13,6 @@ You can get the DEM data in xml format for any location from the following site.
 
 ![](./icon.png)
 
-- You should choose input type(zip or xml / folder), input DEM path, output type(only GeoTiff / GeoTiff & Terrain RGB), output path and EPSG code of GeoTiff, then push OK.
+- You should choose input type('xml'または'xml'を含む'zip' / 'xml'を含むフォルダ), input DEM path, output type(GeoTiff / Terrain RGB), output path and EPSG code of GeoTiff, then push OK.
 
 ![](./docs/img/1.png)
