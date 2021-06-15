@@ -31,7 +31,7 @@ from qgis.core import *
 from qgis.gui import *
 
 from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
-from .convert_fgd_dem.converter import Converter
+from .convert_fgd_dem.src.convert_fgd_dem.converter import Converter
 
 
 class Contents:
