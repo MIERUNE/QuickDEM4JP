@@ -16,4 +16,5 @@ You can find the DEM data in XML format for any location from the following site
 
 - Choose input type('xml'または'xml'を含む'zip' / 'xml'を含むフォルダ), input DEM path, output type(GeoTiff / Terrain RGB), output path and CRS of outputfile, then click OK.
 - The outputfile will be added to the map canvas when the checkbox (アルゴリズムの終了後、QGIS上で出力ファイルを開く) is checked.
+
 ![](./docs/img/1.png)
