@@ -80,15 +80,26 @@ class Contents:
     def convert_DEM(self):
         do_GeoTiff = self.dlg.checkBox_outputGeoTiff.isChecked()
         do_TerrainRGB = self.dlg.checkBox_outputTerrainRGB.isChecked()
-        do_add_layer = self.dlg.checkBox_openLayers.isChecked()
-
         if not do_GeoTiff and not do_TerrainRGB:
             QMessageBox.information(None, 'エラー', u'出力形式にチェックを入れてください')
             return
 
         self.import_path = self.dlg.mQgsFileWidget_inputPath.filePath()
+        if not self.import_path:
+            QMessageBox.information(None, 'エラー', u'DEMの入力先パスを入力してください')
+            return
+
         self.output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
+        if not self.output_path:
+            QMessageBox.information(None, 'エラー', u'DEMの出力先パスを入力してください')
+            return
+
         self.output_epsg = self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
+        if not self.output_epsg:
+            QMessageBox.information(None, 'エラー', u'DEMの出力CRSを入力してください')
+            return
+
+        do_add_layer = self.dlg.checkBox_openLayers.isChecked()
 
         try:
             if do_GeoTiff:
