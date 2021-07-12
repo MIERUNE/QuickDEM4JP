@@ -10,7 +10,7 @@
 name=QuickDEM4JP
 qgisMinimumVersion=3.16
 description=Convert DEM XML files, provided by Geospatial Information Authority of Japan(GSI) to DEM GeoTiff and/or Terrain RGB format GeoTiff.
-version=1.0.1
+version=1.0.2
 author=MIERUNE Inc.
 email=info@mierune.co.jp
 
