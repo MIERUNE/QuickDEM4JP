@@ -22,7 +22,6 @@
 """
 
 import os
-import xml.etree.ElementTree as et
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -124,9 +123,6 @@ class Contents:
                         tiff_name=filename,
                         layer_name=f'{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB'
                     )
-        except (ValueError, AttributeError, et.ParseError):
-            QMessageBox.information(None, 'エラー', u'処理中にエラーが発生しました。DEMが正しいか確認してください')
-            return
         except Exception as e:
             QMessageBox.information(None, 'エラー', f'{e}')
             return
@@ -144,4 +140,4 @@ class Contents:
             self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetMultipleFiles)
         else:
             self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetDirectory)
-
+
