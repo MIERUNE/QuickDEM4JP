@@ -1,0 +1,5 @@
+[flake8]
+ignore = F403,F405
+max-line-length = 79
+exclude = convert_fgd_dem/*
+max-complexity = 18
