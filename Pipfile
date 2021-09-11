@@ -8,6 +8,7 @@ name = "pypi"
 [dev-packages]
 black = "==21.8b0"
 flake8 = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.9"
