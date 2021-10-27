@@ -38,15 +38,23 @@ class Contents:
         self.iface = iface
         self.dlg = QuickDEMforJPDialog()
 
-        self.dlg.mQgsFileWidget_inputPath.setFilePath(QgsProject.instance().homePath())
+        self.dlg.mQgsFileWidget_inputPath.setFilePath(
+            QgsProject.instance().homePath()
+        )
         self.dlg.mQgsFileWidget_inputPath.setFilter("*.xml;;*.zip")
 
-        self.dlg.mQgsFileWidget_outputPath.setFilePath(QgsProject.instance().homePath())
-        self.dlg.mQgsFileWidget_outputPath.setStorageMode(QgsFileWidget.StorageMode.SaveFile)
+        self.dlg.mQgsFileWidget_outputPath.setFilePath(
+            QgsProject.instance().homePath()
+        )
+        self.dlg.mQgsFileWidget_outputPath.setStorageMode(
+            QgsFileWidget.StorageMode.SaveFile
+        )
         self.dlg.mQgsFileWidget_outputPath.setFilter("*.tiff")
         self.dlg.mQgsFileWidget_outputPath.setDialogTitle("保存ファイルを選択してください")
 
-        self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(QgsProject.instance().crs())
+        self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(
+            QgsProject.instance().crs()
+        )
 
         input_type = {
             "'xml'  または  'xml'を含む'zip'": 1,
@@ -65,14 +73,14 @@ class Contents:
             output_path=os.path.dirname(self.output_path),
             output_epsg=self.output_epsg,
             file_name=filename,
-            rgbify=rgbify
+            rgbify=rgbify,
         )
         converter.dem_to_geotiff()
 
     def add_layer(self, tiff_name, layer_name):
         layer = QgsRasterLayer(
             os.path.join(os.path.dirname(self.output_path), tiff_name),
-            layer_name
+            layer_name,
         )
         QgsProject.instance().addMapLayer(layer)
 
@@ -80,22 +88,24 @@ class Contents:
         do_GeoTiff = self.dlg.checkBox_outputGeoTiff.isChecked()
         do_TerrainRGB = self.dlg.checkBox_outputTerrainRGB.isChecked()
         if not do_GeoTiff and not do_TerrainRGB:
-            QMessageBox.information(None, 'エラー', u'出力形式にチェックを入れてください')
+            QMessageBox.information(None, "エラー", "出力形式にチェックを入れてください")
             return
 
         self.import_path = self.dlg.mQgsFileWidget_inputPath.filePath()
         if not self.import_path:
-            QMessageBox.information(None, 'エラー', u'DEMの入力先パスを入力してください')
+            QMessageBox.information(None, "エラー", "DEMの入力先パスを入力してください")
             return
 
         self.output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
         if not self.output_path:
-            QMessageBox.information(None, 'エラー', u'DEMの出力先パスを入力してください')
+            QMessageBox.information(None, "エラー", "DEMの出力先パスを入力してください")
             return
 
-        self.output_epsg = self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
+        self.output_epsg = (
+            self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
+        )
         if not self.output_epsg:
-            QMessageBox.information(None, 'エラー', u'DEMの出力CRSを入力してください')
+            QMessageBox.information(None, "エラー", "DEMの出力CRSを入力してください")
             return
 
         do_add_layer = self.dlg.checkBox_openLayers.isChecked()
@@ -103,31 +113,25 @@ class Contents:
         try:
             if do_GeoTiff:
                 filename = os.path.basename(self.output_path)
-                self.convert(
-                    filename=filename,
-                    rgbify=False
-                )
+                self.convert(filename=filename, rgbify=False)
                 if do_add_layer:
                     self.add_layer(
                         tiff_name=filename,
-                        layer_name=os.path.splitext(filename)[0]
+                        layer_name=os.path.splitext(filename)[0],
                     )
             if do_TerrainRGB:
-                filename = f'{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}'
-                self.convert(
-                    filename=filename,
-                    rgbify=True
-                )
+                filename = f"{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}"
+                self.convert(filename=filename, rgbify=True)
                 if do_add_layer:
                     self.add_layer(
                         tiff_name=filename,
-                        layer_name=f'{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB'
+                        layer_name=f"{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB",
                     )
         except Exception as e:
-            QMessageBox.information(None, 'エラー', f'{e}')
+            QMessageBox.information(None, "エラー", f"{e}")
             return
 
-        QMessageBox.information(None, '完了', u'処理が完了しました')
+        QMessageBox.information(None, "完了", "処理が完了しました")
         self.dlg.hide()
 
         return True
@@ -137,6 +141,10 @@ class Contents:
 
     def switch_input_type(self):
         if self.dlg.comboBox_inputType.currentData() == 1:
-            self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetMultipleFiles)
+            self.dlg.mQgsFileWidget_inputPath.setStorageMode(
+                QgsFileWidget.GetMultipleFiles
+            )
         else:
-            self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetDirectory)
+            self.dlg.mQgsFileWidget_inputPath.setStorageMode(
+                QgsFileWidget.GetDirectory
+            )

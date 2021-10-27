@@ -27,8 +27,9 @@ import os
 from PyQt5 import uic
 from PyQt5 import QtWidgets
 
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'quick_dem_for_jp_dialog_base.ui'))
+FORM_CLASS, _ = uic.loadUiType(
+    os.path.join(os.path.dirname(__file__), "quick_dem_for_jp_dialog_base.ui")
+)
 
 
 class QuickDEMforJPDialog(QtWidgets.QDialog, FORM_CLASS):

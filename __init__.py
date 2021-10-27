@@ -32,4 +32,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     """
     #
     from .quick_dem_for_jp import QuickDEMforJP
+
     return QuickDEMforJP(iface)

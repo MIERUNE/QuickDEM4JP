@@ -40,24 +40,23 @@ class QuickDEMforJP:
         self.iface = iface
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
-        self.icon_path = os.path.join(self.plugin_dir, 'icon.png')
+        self.icon_path = os.path.join(self.plugin_dir, "icon.png")
         # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
+        locale = QSettings().value("locale/userLocale")[0:2]
         locale_path = os.path.join(
-            self.plugin_dir,
-            'i18n',
-            'QuickDEMforJP_{}.qm'.format(locale))
+            self.plugin_dir, "i18n", "QuickDEMforJP_{}.qm".format(locale)
+        )
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
             self.translator.load(locale_path)
 
-            if qVersion() > '4.3.3':
+            if qVersion() > "4.3.3":
                 QCoreApplication.installTranslator(self.translator)
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Quick_DEM_for_JP')
+        self.menu = self.tr("&Quick_DEM_for_JP")
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
@@ -66,7 +65,7 @@ class QuickDEMforJP:
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('QuickDEMforJP', message)
+        return QCoreApplication.translate("QuickDEMforJP", message)
 
     def add_action(
         self,
@@ -78,7 +77,7 @@ class QuickDEMforJP:
         add_to_toolbar=True,
         status_tip=None,
         whats_this=None,
-        parent=None
+        parent=None,
     ):
 
         icon = QIcon(icon_path)
@@ -97,9 +96,7 @@ class QuickDEMforJP:
             self.iface.addToolBarIcon(action)
 
         if add_to_menu:
-            self.iface.addPluginToMenu(
-                self.menu,
-                action)
+            self.iface.addPluginToMenu(self.menu, action)
 
         self.actions.append(action)
 
@@ -110,9 +107,10 @@ class QuickDEMforJP:
 
         self.add_action(
             self.icon_path,
-            text=self.tr(u'Quick_DEM_for_JP'),
+            text=self.tr("Quick_DEM_for_JP"),
             callback=self.dialog_show,
-            parent=self.iface.mainWindow())
+            parent=self.iface.mainWindow(),
+        )
 
         # will be set False in run()
         self.first_start = True
@@ -120,12 +118,9 @@ class QuickDEMforJP:
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
-            self.iface.removePluginMenu(
-                self.tr(u'&Quick_DEM_for_JP'),
-                action)
+            self.iface.removePluginMenu(self.tr("&Quick_DEM_for_JP"), action)
             self.iface.removeToolBarIcon(action)
 
     def dialog_show(self):
-        self.contents = Contents(
-            self.iface)
+        self.contents = Contents(self.iface)
         self.contents.dlg.show()
