@@ -23,11 +23,10 @@
 
 import os
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.core import QgsProject, QgsRasterLayer
+from qgis.gui import QgsFileWidget
+from PyQt5.QtWidgets import QMessageBox
+
 
 from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 from .convert_fgd_dem.src.convert_fgd_dem.converter import Converter
