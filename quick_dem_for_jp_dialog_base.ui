@@ -42,13 +42,26 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_inputType">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QRadioButton" name="radioButton_xmlzipfile">
+          <property name="text">
+           <string>'xml'または'xml'を含む'zip'</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <attribute name="buttonGroup">
+            <string notr="true">buttonGroup_fileformat</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_folder">
+          <property name="text">
+           <string>'xml'を含むフォルダ</string>
+          </property>
+          <attribute name="buttonGroup">
+            <string notr="true">buttonGroup_fileformat</string>
+          </attribute>
          </widget>
         </item>
        </layout>

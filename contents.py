@@ -54,13 +54,8 @@ class Contents:
             QgsProject.instance().crs()
         )
 
-        input_type = {
-            "'xml'  または  'xml'を含む'zip'": 1,
-            "'xml'を含むフォルダ'": 2,
-        }
-        for key in input_type:
-            self.dlg.comboBox_inputType.addItem(key, input_type[key])
-        self.dlg.comboBox_inputType.activated.connect(self.switch_input_type)
+        self.dlg.radioButton_xmlzipfile.toggled.connect(self.switch_input_type)
+        self.dlg.radioButton_folder.toggled.connect(self.switch_input_type)
 
         self.dlg.button_box.accepted.connect(self.convert_DEM)
         self.dlg.button_box.rejected.connect(self.dlg_cancel)
@@ -138,7 +133,7 @@ class Contents:
         self.dlg.hide()
 
     def switch_input_type(self):
-        if self.dlg.comboBox_inputType.currentData() == 1:
+        if self.dlg.radioButton_xmlzipfile.isChecked():
             self.dlg.mQgsFileWidget_inputPath.setStorageMode(
                 QgsFileWidget.GetMultipleFiles
             )
