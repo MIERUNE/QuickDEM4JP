@@ -160,7 +160,7 @@
            </sizepolicy>
           </property>
           <property name="storageMode">
-           <enum>QgsFileWidget::GetDirectory</enum>
+           <enum>QgsFileWidget::SaveFile</enum>
           </property>
          </widget>
         </item>
@@ -209,7 +209,7 @@
            </sizepolicy>
           </property>
           <property name="storageMode">
-           <enum>QgsFileWidget::GetDirectory</enum>
+           <enum>QgsFileWidget::SaveFile</enum>
           </property>
          </widget>
         </item>

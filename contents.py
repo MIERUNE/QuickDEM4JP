@@ -42,11 +42,15 @@ class Contents:
         self.dlg.mQgsFileWidget_inputPath.setFilter("*.xml;;*.zip")
 
         self.dlg.mQgsFileWidget_outputPath.setFilePath(QgsProject.instance().homePath())
-        self.dlg.mQgsFileWidget_outputPath.setStorageMode(
-            QgsFileWidget.StorageMode.SaveFile
-        )
         self.dlg.mQgsFileWidget_outputPath.setFilter("*.tiff")
         self.dlg.mQgsFileWidget_outputPath.setDialogTitle(
+            "保存ファイルを選択してください"
+        )
+        self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(
+            QgsProject.instance().homePath()
+        )
+        self.dlg.mQgsFileWidget_outputPathTerrain.setFilter("*.tiff")
+        self.dlg.mQgsFileWidget_outputPathTerrain.setDialogTitle(
             "保存ファイルを選択してください"
         )
 
