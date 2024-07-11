@@ -54,6 +54,10 @@ class Contents:
             "保存ファイルを選択してください"
         )
 
+        # set terrain path if changed
+        self.dlg.mQgsFileWidget_outputPath.fileChanged.connect(self.set_terrain_path)
+        self.dlg.checkBox_outputTerrainRGB.stateChanged.connect(self.set_terrain_path)
+
         self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(
             QgsProject.instance().crs()
         )
@@ -153,3 +157,16 @@ class Contents:
             )
         else:
             self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetDirectory)
+
+    def set_terrain_path(self):
+        # set Terrain file path automatically if path is not defined and Geotiff path is defined
+        geotiff_path = self.dlg.mQgsFileWidget_outputPath.filePath()
+        if (
+            self.dlg.checkBox_outputTerrainRGB.isChecked()
+            and os.path.splitext(geotiff_path)[1] == ".tiff"
+        ):
+            terrain_path = (
+                os.path.splitext(geotiff_path)[0]
+                + f"_Terrain-RGB{os.path.splitext(os.path.basename(geotiff_path))[1]}"
+            )
+            self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(terrain_path)
