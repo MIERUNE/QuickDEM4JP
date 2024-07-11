@@ -95,8 +95,17 @@ class Contents:
             return
 
         self.output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
-        if not self.output_path:
-            QMessageBox.information(None, "エラー", "DEMの出力先パスを入力してください")
+        if do_GeoTiff and not self.output_path:
+            QMessageBox.information(
+                None, "エラー", "GeoTIFFの出力先パスを入力してください"
+            )
+            return
+
+        self.output_path_terrain = self.dlg.mQgsFileWidget_outputPathTerrain.filePath()
+        if do_TerrainRGB and not self.output_path_terrain:
+            QMessageBox.information(
+                None, "エラー", "Terrain RGBの出力先パスを入力してください"
+            )
             return
 
         self.output_epsg = (
@@ -118,11 +127,12 @@ class Contents:
                     )
             if do_TerrainRGB:
                 filename = f"{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}"
+                filename = os.path.basename(self.output_path_terrain)
                 self.convert(filename=filename, rgbify=True)
                 if do_add_layer:
                     self.add_layer(
                         tiff_name=filename,
-                        layer_name=f"{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB",
+                        layer_name=os.path.splitext(filename)[0],
                     )
         except Exception as e:
             QMessageBox.information(None, "エラー", f"{e}")
