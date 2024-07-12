@@ -123,20 +123,38 @@ class Contents:
 
         try:
             if do_GeoTiff:
+                # check if directory exists
+                directory = os.path.dirname(self.output_path)
+                if not os.path.isdir(directory):
+                    QMessageBox.information(
+                        None, "エラー", f"Cannot find output folder.\n{directory}"
+                    )
+                    return
                 filename = os.path.basename(self.output_path)
+                # Add .tiff to output path if missing
+                if not filename.lower().endswith(".tiff"):
+                    filename += ".tiff"
                 self.convert(filename=filename, rgbify=False)
                 if do_add_layer:
                     self.add_layer(
                         tiff_name=filename, layer_name=os.path.splitext(filename)[0]
                     )
             if do_TerrainRGB:
-                filename = f"{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}"
+                # check if directory exists
+                directory = os.path.dirname(self.output_path_terrain)
+                if not os.path.isdir(directory):
+                    QMessageBox.information(
+                        None, "エラー", f"Cannot find output folder.\n{directory}"
+                    )
+                    return
                 filename = os.path.basename(self.output_path_terrain)
+                # Add .tiff to output path if missing
+                if not filename.lower().endswith(".tiff"):
+                    filename += ".tiff"
                 self.convert(filename=filename, rgbify=True)
                 if do_add_layer:
                     self.add_layer(
-                        tiff_name=filename,
-                        layer_name=os.path.splitext(filename)[0],
+                        tiff_name=filename, layer_name=os.path.splitext(filename)[0]
                     )
         except Exception as e:
             QMessageBox.information(None, "エラー", f"{e}")
