@@ -68,20 +68,18 @@ class Contents:
         self.dlg.button_box.accepted.connect(self.convert_DEM)
         self.dlg.button_box.rejected.connect(self.dlg_cancel)
 
-    def convert(self, filename, rgbify):
+    def convert(self, output_path, filename, rgbify):
         converter = Converter(
             import_path=self.import_path,
-            output_path=os.path.dirname(self.output_path),
+            output_path=output_path,
             output_epsg=self.output_epsg,
             file_name=filename,
             rgbify=rgbify,
         )
         converter.dem_to_geotiff()
 
-    def add_layer(self, tiff_name, layer_name):
-        layer = QgsRasterLayer(
-            os.path.join(os.path.dirname(self.output_path), tiff_name), layer_name
-        )
+    def add_layer(self, output_path, tiff_name, layer_name):
+        layer = QgsRasterLayer(os.path.join(output_path, tiff_name), layer_name)
         QgsProject.instance().addMapLayer(layer)
 
     def convert_DEM(self):
@@ -134,10 +132,17 @@ class Contents:
                 # Add .tiff to output path if missing
                 if not filename.lower().endswith(".tiff"):
                     filename += ".tiff"
-                self.convert(filename=filename, rgbify=False)
+
+                self.convert(
+                    output_path=os.path.dirname(self.output_path),
+                    filename=filename,
+                    rgbify=False,
+                )
                 if do_add_layer:
                     self.add_layer(
-                        tiff_name=filename, layer_name=os.path.splitext(filename)[0]
+                        os.path.dirname(self.output_path),
+                        tiff_name=filename,
+                        layer_name=os.path.splitext(filename)[0],
                     )
             if do_TerrainRGB:
                 # check if directory exists
@@ -151,10 +156,17 @@ class Contents:
                 # Add .tiff to output path if missing
                 if not filename.lower().endswith(".tiff"):
                     filename += ".tiff"
-                self.convert(filename=filename, rgbify=True)
+
+                self.convert(
+                    os.path.dirname(self.output_path_terrain),
+                    filename=filename,
+                    rgbify=True,
+                )
                 if do_add_layer:
                     self.add_layer(
-                        tiff_name=filename, layer_name=os.path.splitext(filename)[0]
+                        os.path.dirname(self.output_path_terrain),
+                        tiff_name=filename,
+                        layer_name=os.path.splitext(filename)[0],
                     )
         except Exception as e:
             QMessageBox.information(None, "エラー", f"{e}")
