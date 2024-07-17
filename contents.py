@@ -182,6 +182,9 @@ class Contents:
         if (
             self.dlg.checkBox_outputTerrainRGB.isChecked()
             and os.path.splitext(geotiff_path)[1] == ".tiff"
+            and not self.dlg.mQgsFileWidget_outputPathTerrain.filePath()
+            .lower()
+            .endswith(".tiff")
         ):
             terrain_path = (
                 os.path.splitext(geotiff_path)[0]
