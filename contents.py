@@ -42,13 +42,21 @@ class Contents:
         self.dlg.mQgsFileWidget_inputPath.setFilter("*.xml;;*.zip")
 
         self.dlg.mQgsFileWidget_outputPath.setFilePath(QgsProject.instance().homePath())
-        self.dlg.mQgsFileWidget_outputPath.setStorageMode(
-            QgsFileWidget.StorageMode.SaveFile
-        )
         self.dlg.mQgsFileWidget_outputPath.setFilter("*.tiff")
         self.dlg.mQgsFileWidget_outputPath.setDialogTitle(
             "保存ファイルを選択してください"
         )
+        self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(
+            QgsProject.instance().homePath()
+        )
+        self.dlg.mQgsFileWidget_outputPathTerrain.setFilter("*.tiff")
+        self.dlg.mQgsFileWidget_outputPathTerrain.setDialogTitle(
+            "保存ファイルを選択してください"
+        )
+
+        # set terrain path if changed
+        self.dlg.mQgsFileWidget_outputPath.fileChanged.connect(self.set_terrain_path)
+        self.dlg.checkBox_outputTerrainRGB.stateChanged.connect(self.set_terrain_path)
 
         self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(
             QgsProject.instance().crs()
@@ -60,20 +68,18 @@ class Contents:
         self.dlg.button_box.accepted.connect(self.convert_DEM)
         self.dlg.button_box.rejected.connect(self.dlg_cancel)
 
-    def convert(self, filename, rgbify):
+    def convert(self, output_path, filename, rgbify):
         converter = Converter(
             import_path=self.import_path,
-            output_path=os.path.dirname(self.output_path),
+            output_path=output_path,
             output_epsg=self.output_epsg,
             file_name=filename,
             rgbify=rgbify,
         )
         converter.dem_to_geotiff()
 
-    def add_layer(self, tiff_name, layer_name):
-        layer = QgsRasterLayer(
-            os.path.join(os.path.dirname(self.output_path), tiff_name), layer_name
-        )
+    def add_layer(self, output_path, tiff_name, layer_name):
+        layer = QgsRasterLayer(os.path.join(output_path, tiff_name), layer_name)
         QgsProject.instance().addMapLayer(layer)
 
     def convert_DEM(self):
@@ -91,8 +97,17 @@ class Contents:
             return
 
         self.output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
-        if not self.output_path:
-            QMessageBox.information(None, "エラー", "DEMの出力先パスを入力してください")
+        if do_GeoTiff and not self.output_path:
+            QMessageBox.information(
+                None, "エラー", "GeoTIFFの出力先パスを入力してください"
+            )
+            return
+
+        self.output_path_terrain = self.dlg.mQgsFileWidget_outputPathTerrain.filePath()
+        if do_TerrainRGB and not self.output_path_terrain:
+            QMessageBox.information(
+                None, "エラー", "Terrain RGBの出力先パスを入力してください"
+            )
             return
 
         self.output_epsg = (
@@ -106,19 +121,52 @@ class Contents:
 
         try:
             if do_GeoTiff:
+                # check if directory exists
+                directory = os.path.dirname(self.output_path)
+                if not os.path.isdir(directory):
+                    QMessageBox.information(
+                        None, "エラー", f"Cannot find output folder.\n{directory}"
+                    )
+                    return
                 filename = os.path.basename(self.output_path)
-                self.convert(filename=filename, rgbify=False)
+                # Add .tiff to output path if missing
+                if not filename.lower().endswith(".tiff"):
+                    filename += ".tiff"
+
+                self.convert(
+                    output_path=os.path.dirname(self.output_path),
+                    filename=filename,
+                    rgbify=False,
+                )
                 if do_add_layer:
                     self.add_layer(
-                        tiff_name=filename, layer_name=os.path.splitext(filename)[0]
+                        os.path.dirname(self.output_path),
+                        tiff_name=filename,
+                        layer_name=os.path.splitext(filename)[0],
                     )
             if do_TerrainRGB:
-                filename = f"{os.path.splitext(self.output_path)[0]}_Terrain-RGB{os.path.splitext(os.path.basename(self.output_path))[1]}"
-                self.convert(filename=filename, rgbify=True)
+                # check if directory exists
+                directory = os.path.dirname(self.output_path_terrain)
+                if not os.path.isdir(directory):
+                    QMessageBox.information(
+                        None, "エラー", f"Cannot find output folder.\n{directory}"
+                    )
+                    return
+                filename = os.path.basename(self.output_path_terrain)
+                # Add .tiff to output path if missing
+                if not filename.lower().endswith(".tiff"):
+                    filename += ".tiff"
+
+                self.convert(
+                    os.path.dirname(self.output_path_terrain),
+                    filename=filename,
+                    rgbify=True,
+                )
                 if do_add_layer:
                     self.add_layer(
+                        os.path.dirname(self.output_path_terrain),
                         tiff_name=filename,
-                        layer_name=f"{os.path.splitext(os.path.basename(self.output_path))[0]}_Terrain-RGB",
+                        layer_name=os.path.splitext(filename)[0],
                     )
         except Exception as e:
             QMessageBox.information(None, "エラー", f"{e}")
@@ -139,3 +187,19 @@ class Contents:
             )
         else:
             self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetDirectory)
+
+    def set_terrain_path(self):
+        # set Terrain file path automatically if path is not defined and Geotiff path is defined
+        geotiff_path = self.dlg.mQgsFileWidget_outputPath.filePath()
+        if (
+            self.dlg.checkBox_outputTerrainRGB.isChecked()
+            and os.path.splitext(geotiff_path)[1] == ".tiff"
+            and not self.dlg.mQgsFileWidget_outputPathTerrain.filePath()
+            .lower()
+            .endswith(".tiff")
+        ):
+            terrain_path = (
+                os.path.splitext(geotiff_path)[0]
+                + f"_Terrain-RGB{os.path.splitext(os.path.basename(geotiff_path))[1]}"
+            )
+            self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(terrain_path)
