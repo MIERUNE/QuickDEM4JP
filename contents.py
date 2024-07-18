@@ -69,12 +69,14 @@ class Contents:
         self.dlg.button_box.rejected.connect(self.dlg_cancel)
 
     def convert(self, output_path, filename, rgbify):
+
         converter = Converter(
             import_path=self.import_path,
             output_path=output_path,
             output_epsg=self.output_epsg,
             file_name=filename,
             rgbify=rgbify,
+            sea_at_zero=self.dlg.checkBox_sea_zero.isChecked(),
         )
         converter.dem_to_geotiff()
 
@@ -85,6 +87,7 @@ class Contents:
     def convert_DEM(self):
         do_GeoTiff = self.dlg.checkBox_outputGeoTiff.isChecked()
         do_TerrainRGB = self.dlg.checkBox_outputTerrainRGB.isChecked()
+
         if not do_GeoTiff and not do_TerrainRGB:
             QMessageBox.information(
                 None, "エラー", "出力形式にチェックを入れてください"
