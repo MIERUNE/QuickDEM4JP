@@ -108,7 +108,7 @@
       <string>出力設定</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
+     <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
          <widget class="QCheckBox" name="checkBox_outputGeoTiff">
@@ -247,6 +247,25 @@
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_sea_zero">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>海域標高を0mに設定する</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="checkBox_openLayers">
