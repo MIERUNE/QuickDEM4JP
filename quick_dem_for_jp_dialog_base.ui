@@ -290,14 +290,28 @@
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="button_box">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_bottom">
+      <item>
+        <widget class="QPushButton" name="downloadButton">
+          <property name="enabled">
+          <bool>true</bool>
+          </property>
+          <property name="text">
+          <string>ダウンロードページ</string>
+          </property>
+        </widget>
+      </item>
+      <item>
+        <widget class="QDialogButtonBox" name="button_box">
+        <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="standardButtons">
+          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+        </property>
+        </widget>
+      </item>
+   </layout>
    </item>
   </layout>
  </widget>

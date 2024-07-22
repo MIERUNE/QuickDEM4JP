@@ -22,6 +22,7 @@
 """
 
 import os
+import webbrowser
 
 from qgis.core import QgsProject, QgsRasterLayer
 from qgis.gui import QgsFileWidget
@@ -67,6 +68,8 @@ class Contents:
 
         self.dlg.button_box.accepted.connect(self.convert_DEM)
         self.dlg.button_box.rejected.connect(self.dlg_cancel)
+
+        self.dlg.downloadButton.clicked.connect(self.on_download_page_clicked)
 
     def convert(self, output_path, filename, rgbify):
 
@@ -206,3 +209,7 @@ class Contents:
                 + f"_Terrain-RGB{os.path.splitext(os.path.basename(geotiff_path))[1]}"
             )
             self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(terrain_path)
+
+    def on_download_page_clicked(self):
+        webbrowser.open("https://fgd.gsi.go.jp/download/")
+        return
