@@ -144,7 +144,7 @@ class Contents:
         do_add_layer = self.dlg.checkBox_openLayers.isChecked()
 
         try:
-            if do_GeoTiff:
+            if do_GeoTiff and not self.process_interrupted:
                 # check if directory exists
                 directory = os.path.dirname(self.output_path)
                 if not os.path.isdir(directory):
@@ -243,6 +243,7 @@ class Contents:
             QMessageBox.No,
         ):
             self.set_interrupted()
+            thread.process_interrupted = True
             self.abort_process(thread, progress_dialog)
 
     def abort_process(self, thread, progress_dialog: ProgressDialog) -> None:
