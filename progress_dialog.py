@@ -37,7 +37,6 @@ class ProgressDialog(QDialog):
 
     def abort_dialog(self):
         if self.abortButton.isEnabled():  # abort if possible
-            self.set_abort_flag_callback()
             self.abortButton.setEnabled(False)
             self.abortButton.setText(self.tr("Cancelling..."))
             self.close()
@@ -49,7 +48,7 @@ class ProgressDialog(QDialog):
         self.progressBar.setValue(self.progressBar.value() + value)
 
     def set_message(self, message: str):
-        self.label.setText(self.translate(message))
+        self.label.setText(message)
 
     def set_abortable(self, abortable=True):
         self.abortButton.setEnabled(abortable)
@@ -57,47 +56,3 @@ class ProgressDialog(QDialog):
     def close_dialog(self):
         print("closing")
         self.ui.close()
-
-    def translate(self, message):
-        # translate in this QDialog class to be detected by QLinguist.
-        if message == "Processing...":
-            translated_message = self.tr("Processing...")
-        elif message == "Finalizing...":
-            translated_message = self.tr("Finalizing...")
-        elif message == "Aborting":
-            translated_message = self.tr("Aborting")
-        elif message == "Are you sure to cancel process?":
-            translated_message = self.tr("Are you sure to cancel process?")
-        elif message == "Error":
-            translated_message = self.tr("Error")
-        elif message == "Output file is not defined.":
-            translated_message = self.tr("Output file is not defined.")
-        elif message == "Cannot find output folder.":
-            translated_message = self.tr("Cannot find output folder.")
-        elif message == "CRS of output file is not defined.":
-            translated_message = self.tr("CRS of output file is not defined.")
-        elif (
-            message
-            == "Target extent must not cross the International Date Line meridian."
-        ):
-            translated_message = self.tr(
-                "Target extent must not cross the International Date Line meridian."
-            )
-        elif message == "Too large amount of tiles ({})":
-            translated_message = self.tr("Too large amount of tiles ({})")
-        elif message == "Set a lower zoom level or extent to get less than {} tiles.":
-            translated_message = self.tr(
-                "Set a lower zoom level or extent to get less than {} tiles."
-            )
-        elif message == "Dowloading {} tiles may take a while. Process anyway?":
-            translated_message = self.tr(
-                "Dowloading {} tiles may take a while. Process anyway?"
-            )
-        elif message == "Warning":
-            translated_message = self.tr("Warning")
-        elif message == "DEM exported to Geotiff Format.":
-            translated_message = self.tr("DEM exported to Geotiff Format.")
-        else:
-            # fallback origin message
-            translated_message = message
-        return translated_message

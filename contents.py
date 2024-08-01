@@ -72,6 +72,8 @@ class Contents:
 
         self.dlg.downloadButton.clicked.connect(self.on_download_page_clicked)
 
+        self.process_interrupted = False
+
     def convert(self, output_path, filename, rgbify):
         progress_dialog = ProgressDialog(None)
 
@@ -84,6 +86,11 @@ class Contents:
             sea_at_zero=self.dlg.checkBox_sea_zero.isChecked(),
         )
 
+        progress_dialog.abortButton.clicked.connect(
+            lambda: [
+                self.on_abort_clicked(thread, progress_dialog),
+            ]
+        )
         # progress dialog orchestation by process thread
         thread.setMaximum.connect(progress_dialog.set_maximum)
         thread.addProgress.connect(progress_dialog.add_progress)
@@ -155,13 +162,13 @@ class Contents:
                     filename=filename,
                     rgbify=False,
                 )
-                if do_add_layer:
+                if do_add_layer and not self.process_interrupted:
                     self.add_layer(
                         os.path.dirname(self.output_path),
                         tiff_name=filename,
                         layer_name=os.path.splitext(filename)[0],
                     )
-            if do_TerrainRGB:
+            if do_TerrainRGB and not self.process_interrupted:
                 # check if directory exists
                 directory = os.path.dirname(self.output_path_terrain)
                 if not os.path.isdir(directory):
@@ -179,7 +186,7 @@ class Contents:
                     filename=filename,
                     rgbify=True,
                 )
-                if do_add_layer:
+                if do_add_layer and not self.process_interrupted:
                     self.add_layer(
                         os.path.dirname(self.output_path_terrain),
                         tiff_name=filename,
@@ -189,7 +196,9 @@ class Contents:
             QMessageBox.information(None, "エラー", f"{e}")
             return
 
-        QMessageBox.information(None, "完了", "処理が完了しました")
+        if not self.process_interrupted:
+            QMessageBox.information(None, "完了", "処理が完了しました")
+
         self.dlg.hide()
 
         return True
@@ -224,3 +233,24 @@ class Contents:
     def on_download_page_clicked(self):
         webbrowser.open("https://fgd.gsi.go.jp/download/")
         return
+
+    def on_abort_clicked(self, thread, progress_dialog: ProgressDialog) -> None:
+        if QMessageBox.Yes == QMessageBox.question(
+            None,
+            "Aborting",
+            "Are you sure to cancel process?",
+            QMessageBox.Yes,
+            QMessageBox.No,
+        ):
+            self.set_interrupted()
+            self.abort_process(thread, progress_dialog)
+
+    def abort_process(self, thread, progress_dialog: ProgressDialog) -> None:
+        if self.process_interrupted:
+            thread.exit()
+            progress_dialog.abort_dialog()
+            self.dlg_cancel()
+            return
+
+    def set_interrupted(self):
+        self.process_interrupted = True
