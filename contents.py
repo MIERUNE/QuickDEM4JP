@@ -75,7 +75,7 @@ class Contents:
     def convert(self, output_path, filename, rgbify):
         progress_dialog = ProgressDialog(None)
 
-        converter = Converter(
+        thread = Converter(
             import_path=self.import_path,
             output_path=output_path,
             output_epsg=self.output_epsg,
@@ -83,7 +83,15 @@ class Contents:
             rgbify=rgbify,
             sea_at_zero=self.dlg.checkBox_sea_zero.isChecked(),
         )
-        converter.dem_to_geotiff()
+
+        # progress dialog orchestation by process thread
+        thread.setMaximum.connect(progress_dialog.set_maximum)
+        thread.addProgress.connect(progress_dialog.add_progress)
+        thread.postMessage.connect(progress_dialog.set_message)
+        thread.setAbortable.connect(progress_dialog.set_abortable)
+        thread.processFinished.connect(progress_dialog.close)
+
+        thread.start()
         progress_dialog.exec_()
 
     def add_layer(self, output_path, tiff_name, layer_name):
