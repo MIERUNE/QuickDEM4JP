@@ -28,9 +28,10 @@ from qgis.core import QgsProject, QgsRasterLayer
 from qgis.gui import QgsFileWidget
 from PyQt5.QtWidgets import QMessageBox
 
-
 from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 from .convert_fgd_dem.src.convert_fgd_dem.converter import Converter
+
+from .progress_dialog import ProgressDialog
 
 
 class Contents:
@@ -72,6 +73,7 @@ class Contents:
         self.dlg.downloadButton.clicked.connect(self.on_download_page_clicked)
 
     def convert(self, output_path, filename, rgbify):
+        progress_dialog = ProgressDialog(None)
 
         converter = Converter(
             import_path=self.import_path,
@@ -82,6 +84,7 @@ class Contents:
             sea_at_zero=self.dlg.checkBox_sea_zero.isChecked(),
         )
         converter.dem_to_geotiff()
+        progress_dialog.exec_()
 
     def add_layer(self, output_path, tiff_name, layer_name):
         layer = QgsRasterLayer(os.path.join(output_path, tiff_name), layer_name)
