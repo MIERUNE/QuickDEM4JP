@@ -36,6 +36,8 @@ from .progress_dialog import ProgressDialog
 
 class Contents:
     def __init__(self, iface):
+        progress_dialog = ProgressDialog(None)
+
         self.iface = iface
         self.dlg = QuickDEMforJPDialog()
 
@@ -46,14 +48,14 @@ class Contents:
         self.dlg.mQgsFileWidget_outputPath.setFilePath(QgsProject.instance().homePath())
         self.dlg.mQgsFileWidget_outputPath.setFilter("*.tiff")
         self.dlg.mQgsFileWidget_outputPath.setDialogTitle(
-            "保存ファイルを選択してください"
+            progress_dialog.translate("Set the output file")
         )
         self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(
             QgsProject.instance().homePath()
         )
         self.dlg.mQgsFileWidget_outputPathTerrain.setFilter("*.tiff")
         self.dlg.mQgsFileWidget_outputPathTerrain.setDialogTitle(
-            "保存ファイルを選択してください"
+            progress_dialog.translate("Set the output file")
         )
 
         # set terrain path if changed
@@ -106,31 +108,43 @@ class Contents:
         QgsProject.instance().addMapLayer(layer)
 
     def convert_DEM(self):
+        progress_dialog = ProgressDialog(None)
+
         do_GeoTiff = self.dlg.checkBox_outputGeoTiff.isChecked()
         do_TerrainRGB = self.dlg.checkBox_outputTerrainRGB.isChecked()
 
         if not do_GeoTiff and not do_TerrainRGB:
             QMessageBox.information(
-                None, "エラー", "出力形式にチェックを入れてください"
+                None,
+                progress_dialog.translate("Error"),
+                progress_dialog.translate("Output format is not checked."),
             )
             return
 
         self.import_path = self.dlg.mQgsFileWidget_inputPath.filePath()
         if not self.import_path:
-            QMessageBox.information(None, "エラー", "DEMの入力先パスを入力してください")
+            QMessageBox.information(
+                None,
+                progress_dialog.translate("Error"),
+                progress_dialog.translate("Input DEM path is not defined."),
+            )
             return
 
         self.output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
         if do_GeoTiff and not self.output_path:
             QMessageBox.information(
-                None, "エラー", "GeoTIFFの出力先パスを入力してください"
+                None,
+                progress_dialog.translate("Error"),
+                progress_dialog.translate("GeoTIFF output path is not defined."),
             )
             return
 
         self.output_path_terrain = self.dlg.mQgsFileWidget_outputPathTerrain.filePath()
         if do_TerrainRGB and not self.output_path_terrain:
             QMessageBox.information(
-                None, "エラー", "Terrain RGBの出力先パスを入力してください"
+                None,
+                progress_dialog.translate("Error"),
+                progress_dialog.translate("Terrain RGB output path is not defined."),
             )
             return
 
@@ -138,7 +152,11 @@ class Contents:
             self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
         )
         if not self.output_epsg:
-            QMessageBox.information(None, "エラー", "DEMの出力CRSを入力してください")
+            QMessageBox.information(
+                None,
+                progress_dialog.translate("Error"),
+                progress_dialog.translate("CRS of output file is not defined."),
+            )
             return
 
         do_add_layer = self.dlg.checkBox_openLayers.isChecked()
@@ -149,7 +167,10 @@ class Contents:
                 directory = os.path.dirname(self.output_path)
                 if not os.path.isdir(directory):
                     QMessageBox.information(
-                        None, "エラー", f"Cannot find output folder.\n{directory}"
+                        None,
+                        progress_dialog.translate("Error"),
+                        progress_dialog.translate("Cannot find output folder.")
+                        + f"\n{directory}",
                     )
                     return
                 filename = os.path.basename(self.output_path)
@@ -173,7 +194,10 @@ class Contents:
                 directory = os.path.dirname(self.output_path_terrain)
                 if not os.path.isdir(directory):
                     QMessageBox.information(
-                        None, "エラー", f"Cannot find output folder.\n{directory}"
+                        None,
+                        progress_dialog.translate("Error"),
+                        progress_dialog.translate("Cannot find output folder.")
+                        + f"\n{directory}",
                     )
                     return
                 filename = os.path.basename(self.output_path_terrain)
@@ -193,11 +217,15 @@ class Contents:
                         layer_name=os.path.splitext(filename)[0],
                     )
         except Exception as e:
-            QMessageBox.information(None, "エラー", f"{e}")
+            QMessageBox.information(None, progress_dialog.translate("Error"), f"{e}")
             return
 
         if not self.process_interrupted:
-            QMessageBox.information(None, "完了", "処理が完了しました")
+            QMessageBox.information(
+                None,
+                progress_dialog.translate("Completed"),
+                progress_dialog.translate("Process completed."),
+            )
 
         self.dlg.hide()
 
@@ -237,8 +265,8 @@ class Contents:
     def on_abort_clicked(self, thread, progress_dialog: ProgressDialog) -> None:
         if QMessageBox.Yes == QMessageBox.question(
             None,
-            "Aborting",
-            "Are you sure to cancel process?",
+            progress_dialog.translate("Aborting"),
+            progress_dialog.translate("Are you sure to cancel process?"),
             QMessageBox.Yes,
             QMessageBox.No,
         ):

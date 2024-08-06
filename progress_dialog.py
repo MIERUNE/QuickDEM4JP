@@ -56,3 +56,47 @@ class ProgressDialog(QDialog):
     def close_dialog(self):
         print("closing")
         self.ui.close()
+
+    def translate(self, message):
+        # translate in this QDialog class to be detected by QLinguist.
+        if message == "Set the output file":
+            translated_message = self.tr("Set the output file")
+            # 保存ファイルを選択してください
+        elif message == "Error":
+            translated_message = self.tr("Error")
+        elif message == "Finalizing...":
+            translated_message = self.tr("Finalizing...")
+        elif message == "Aborting":
+            translated_message = self.tr("Aborting")
+        elif message == "Are you sure to cancel process?":
+            translated_message = self.tr("Are you sure to cancel process?")
+        elif message == "Output format is not checked.":
+            translated_message = self.tr("Output format is not checked.")
+            # 出力形式にチェックを入れてください
+        elif message == "Input DEM path is not defined.":
+            translated_message = self.tr("Input DEM path is not defined.")
+            # DEMの入力先パスを入力してください
+        elif message == "GeoTIFF output path is not defined.":
+            translated_message = self.tr("GeoTIFF output path is not defined.")
+            # GeoTIFFの出力先パスを入力してください
+        elif message == "Terrain RGB output path is not defined.":
+            translated_message = self.tr("Terrain RGB output path is not defined.")
+            # Terrain RGBの出力先パスを入力してください
+        elif message == "CRS of output file is not defined.":
+            translated_message = self.tr("CRS of output file is not defined.")
+            # "DEMの出力CRSを入力してください"
+        elif message == "Cannot find output folder.":
+            translated_message = self.tr("Cannot find output folder.")
+        elif message == "Completed":
+            translated_message = self.tr("Completed")
+            # 完了
+        elif message == "Process completed.":
+            translated_message = self.tr("Process completed.")
+            # 処理が完了しました
+
+        elif message == "Warning":
+            translated_message = self.tr("Warning")
+        else:
+            # fallback origin message
+            translated_message = message
+        return translated_message
