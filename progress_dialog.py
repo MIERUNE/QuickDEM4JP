@@ -94,8 +94,18 @@ class ProgressDialog(QDialog):
             translated_message = self.tr("Process completed.")
             # 処理が完了しました
 
+        # Submodule errors
+        elif message == "No XML file found in input folder.":
+            translated_message = self.tr("No XML file found in input folder.")
+            # 指定ディレクトリに.xmlが存在しません
+
         elif message == "Warning":
             translated_message = self.tr("Warning")
+        elif message.split(":")[0] == "Image size is too large":
+            translated_message = (
+                self.tr("Image size is too large") + ": " + message.split(":")[1]
+            )
+            # セルサイズが大きすぎます。x={x_length}・y={y_length}
         else:
             # fallback origin message
             translated_message = message

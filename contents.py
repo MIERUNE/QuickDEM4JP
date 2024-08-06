@@ -99,6 +99,11 @@ class Contents:
         thread.postMessage.connect(progress_dialog.set_message)
         thread.setAbortable.connect(progress_dialog.set_abortable)
         thread.processFinished.connect(progress_dialog.close)
+        thread.processFailed.connect(
+            lambda error_message: [
+                self.handle_process_failed(error_message, thread, progress_dialog)
+            ]
+        )
 
         thread.start()
         progress_dialog.exec_()
@@ -217,7 +222,9 @@ class Contents:
                         layer_name=os.path.splitext(filename)[0],
                     )
         except Exception as e:
-            QMessageBox.information(None, progress_dialog.translate("Error"), f"{e}")
+            QMessageBox.information(
+                None, progress_dialog.translate("Error"), progress_dialog.translate(e)
+            )
             return
 
         if not self.process_interrupted:
@@ -283,3 +290,13 @@ class Contents:
 
     def set_interrupted(self):
         self.process_interrupted = True
+
+    def handle_process_failed(self, error_message, thread, progress_dialog):
+        progress_dialog.close()
+        QMessageBox.information(
+            None,
+            progress_dialog.translate("Error"),
+            progress_dialog.translate(error_message),
+        )
+        self.set_interrupted()
+        self.abort_process(thread, progress_dialog)
