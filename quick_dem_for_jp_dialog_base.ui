@@ -17,7 +17,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>入力設定</string>
+      <string>Input settings</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -37,14 +37,14 @@
            </size>
           </property>
           <property name="text">
-           <string>形式</string>
+           <string>Format</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QRadioButton" name="radioButton_xmlzipfile">
           <property name="text">
-           <string>'xml'または'xml'を含む'zip'</string>
+           <string>'xml' or zip file including 'xml'</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -57,7 +57,7 @@
         <item>
          <widget class="QRadioButton" name="radioButton_folder">
           <property name="text">
-           <string>'xml'を含むフォルダ</string>
+           <string>Folder including 'xml'</string>
           </property>
           <attribute name="buttonGroup">
             <string notr="true">buttonGroup_fileformat</string>
@@ -105,7 +105,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>出力設定</string>
+      <string>Output settings</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
@@ -147,7 +147,7 @@
            </size>
           </property>
           <property name="text">
-           <string>出力先</string>
+           <string>Output path</string>
           </property>
          </widget>
         </item>
@@ -196,7 +196,7 @@
            </size>
           </property>
           <property name="text">
-           <string>出力先</string>
+           <string>Output path</string>
           </property>
          </widget>
         </item>
@@ -260,7 +260,7 @@
          <enum>Qt::LeftToRight</enum>
         </property>
         <property name="text">
-         <string>海域標高を0mに設定する</string>
+         <string>Set 0m to sea area</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -279,7 +279,7 @@
          <enum>Qt::LeftToRight</enum>
         </property>
         <property name="text">
-         <string>アルゴリズムの終了後、QGIS上で出力ファイルを開く</string>
+         <string>Add output layers after process</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -297,7 +297,7 @@
           <bool>true</bool>
           </property>
           <property name="text">
-          <string>ダウンロードページ</string>
+          <string>Download page</string>
           </property>
         </widget>
       </item>
