@@ -99,8 +99,35 @@ class ProgressDialog(QDialog):
             translated_message = self.tr("No XML file found in input folder.")
             # 指定ディレクトリに.xmlが存在しません
 
+        elif message == "No XML file found in input zip file.":
+            translated_message = self.tr("No XML file found in input zip file.")
+            # 指定のパスにxmlファイルが存在しません
+
+        elif (
+            message
+            == "Only ZIP file, XML file, or folder conatining XML files are allowed."
+        ):
+            translated_message = self.tr(
+                "Only ZIP file, XML file, or folder conatining XML files are allowed."
+            )
+            # 指定できる形式は「xml」「.xmlが格納されたディレクトリ」「.xmlが格納された.zip」のみです
+        elif message == "Only XML file format is allowed.":
+            translated_message = self.tr("Only XML file format is allowed.")
+            # 指定できる形式は.xmlのみです
+        elif message == "Incorrect XML file.":
+            translated_message = self.tr("Incorrect XML file.")
+            # 不正なxmlです
+        elif message == "Mixed mesh format (2nd mesh and 3rd mesh)":
+            translated_message = self.tr("Mixed mesh format (2nd mesh and 3rd mesh)")
+            # 2次メッシュと3次メッシュが混合しています。
+
         elif message == "Warning":
             translated_message = self.tr("Warning")
+        elif message.split(":")[0] == "Incorrect Mmsh code":
+            translated_message = (
+                self.tr("Incorrect Mmsh code") + ": " + message.split(":")[1]
+            )
+            # メッシュコードが不正です: mesh_code={mesh_code}
         elif message.split(":")[0] == "Image size is too large":
             translated_message = (
                 self.tr("Image size is too large") + ": " + message.split(":")[1]
