@@ -48,7 +48,7 @@ class ProgressDialog(QDialog):
         self.progressBar.setValue(self.progressBar.value() + value)
 
     def set_message(self, message: str):
-        self.label.setText(message)
+        self.label.setText(self.translate(message))
 
     def set_abortable(self, abortable=True):
         self.abortButton.setEnabled(abortable)
@@ -64,8 +64,6 @@ class ProgressDialog(QDialog):
             # 保存ファイルを選択してください
         elif message == "Error":
             translated_message = self.tr("Error")
-        elif message == "Finalizing...":
-            translated_message = self.tr("Finalizing...")
         elif message == "Aborting":
             translated_message = self.tr("Aborting")
         elif message == "Are you sure to cancel process?":
@@ -95,6 +93,13 @@ class ProgressDialog(QDialog):
             # 処理が完了しました
 
         # Submodule errors
+        elif message == "Converting XML files to Terrain RGB...":
+            translated_message = self.tr("Converting XML files to Terrain RGB...")
+        elif message == "Converting XML files to GeoTIFF DEM...":
+            translated_message = self.tr("Converting XML files to GeoTIFF DEM...")
+        elif message == "Creating TIFF file...":
+            translated_message = self.tr("Creating TIFF file...")
+
         elif message == "No XML file found in input folder.":
             translated_message = self.tr("No XML file found in input folder.")
             # 指定ディレクトリに.xmlが存在しません
@@ -123,9 +128,9 @@ class ProgressDialog(QDialog):
 
         elif message == "Warning":
             translated_message = self.tr("Warning")
-        elif message.split(":")[0] == "Incorrect Mmsh code":
+        elif message.split(":")[0] == "Incorrect Mesh code":
             translated_message = (
-                self.tr("Incorrect Mmsh code") + ": " + message.split(":")[1]
+                self.tr("Incorrect Mesh code") + ": " + message.split(":")[1]
             )
             # メッシュコードが不正です: mesh_code={mesh_code}
         elif message.split(":")[0] == "Image size is too large":
