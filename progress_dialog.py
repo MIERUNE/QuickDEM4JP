@@ -59,68 +59,67 @@ class ProgressDialog(QDialog):
 
     def translate(self, message):
         # translate in this QDialog class to be detected by QLinguist.
-        if message == "Set the output file":
-            translated_message = self.tr("Set the output file")
-        elif message == "Error":
-            translated_message = self.tr("Error")
-        elif message == "Aborting":
-            translated_message = self.tr("Aborting")
-        elif message == "Are you sure to cancel process?":
-            translated_message = self.tr("Are you sure to cancel process?")
-        elif message == "Output format is not checked.":
-            translated_message = self.tr("Output format is not checked.")
-        elif message == "Input DEM path is not defined.":
-            translated_message = self.tr("Input DEM path is not defined.")
-        elif message == "GeoTIFF output path is not defined.":
-            translated_message = self.tr("GeoTIFF output path is not defined.")
-        elif message == "Terrain RGB output path is not defined.":
-            translated_message = self.tr("Terrain RGB output path is not defined.")
-        elif message == "CRS of output file is not defined.":
-            translated_message = self.tr("CRS of output file is not defined.")
-        elif message == "Cannot find output folder.":
-            translated_message = self.tr("Cannot find output folder.")
-        elif message == "Completed":
-            translated_message = self.tr("Completed")
-        elif message == "Process completed.":
-            translated_message = self.tr("Process completed.")
-
-        # Submodule errors
-        elif message == "Converting XML files to Terrain RGB...":
-            translated_message = self.tr("Converting XML files to Terrain RGB...")
-        elif message == "Converting XML files to GeoTIFF DEM...":
-            translated_message = self.tr("Converting XML files to GeoTIFF DEM...")
-        elif message == "Creating TIFF file...":
-            translated_message = self.tr("Creating TIFF file...")
-        elif message == "No XML file found in input folder.":
-            translated_message = self.tr("No XML file found in input folder.")
-        elif message == "No XML file found in input zip file.":
-            translated_message = self.tr("No XML file found in input zip file.")
-        elif (
-            message
-            == "Only ZIP file, XML file, or folder conatining XML files are allowed."
-        ):
-            translated_message = self.tr(
+        message_dic = {
+            "Set the output file": self.tr("Set the output file"),
+            "Error": self.tr("Error"),
+            "Aborting": self.tr("Aborting"),
+            "Are you sure to cancel process?": self.tr(
+                "Are you sure to cancel process?"
+            ),
+            "Output format is not checked.": self.tr("Output format is not checked."),
+            "Input DEM path is not defined.": self.tr("Input DEM path is not defined."),
+            "GeoTIFF output path is not defined.": self.tr(
+                "GeoTIFF output path is not defined."
+            ),
+            "Terrain RGB output path is not defined.": self.tr(
+                "Terrain RGB output path is not defined."
+            ),
+            "CRS of output file is not defined.": self.tr(
+                "CRS of output file is not defined."
+            ),
+            "Cannot find output folder.": self.tr("Cannot find output folder."),
+            "Completed": self.tr("Completed"),
+            "Process completed.": self.tr("Process completed."),
+            # Submodule errors
+            "Converting XML files to Terrain RGB...": self.tr(
+                "Converting XML files to Terrain RGB..."
+            ),
+            "Converting XML files to GeoTIFF DEM...": self.tr(
+                "Converting XML files to GeoTIFF DEM..."
+            ),
+            "Creating TIFF file...": self.tr("Creating TIFF file..."),
+            "No XML file found in input folder.": self.tr(
+                "No XML file found in input folder."
+            ),
+            "No XML file found in input zip file.": self.tr(
+                "No XML file found in input zip file."
+            ),
+            "Only ZIP file, XML file, or folder conatining XML files are allowed.": self.tr(
                 "Only ZIP file, XML file, or folder conatining XML files are allowed."
-            )
-        elif message == "Only XML file format is allowed.":
-            translated_message = self.tr("Only XML file format is allowed.")
-        elif message == "Incorrect XML file.":
-            translated_message = self.tr("Incorrect XML file.")
-        elif message == "Mixed mesh format (2nd mesh and 3rd mesh)":
-            translated_message = self.tr("Mixed mesh format (2nd mesh and 3rd mesh)")
-        elif message == "Warning":
-            translated_message = self.tr("Warning")
-        elif message.split(":")[0] == "Incorrect Mesh code":
+            ),
+            "Only XML file format is allowed.": self.tr(
+                "Only XML file format is allowed."
+            ),
+            "Incorrect XML file.": self.tr("Incorrect XML file."),
+            "Mixed mesh format (2nd mesh and 3rd mesh)": self.tr(
+                "Mixed mesh format (2nd mesh and 3rd mesh)"
+            ),
+            "Warning": self.tr("Warning"),
+        }
+        translated_message = message_dic.get(
+            message, message
+        )  # fallback is self message
+
+        # Handle messages with variables
+        if translated_message.split(":")[0] == "Incorrect Mesh code":
             translated_message = (
                 self.tr("Incorrect Mesh code") + ": " + message.split(":")[1]
             )
             # メッシュコードが不正です: mesh_code={mesh_code}
-        elif message.split(":")[0] == "Image size is too large":
+        elif translated_message.split(":")[0] == "Image size is too large":
             translated_message = (
                 self.tr("Image size is too large") + ": " + message.split(":")[1]
             )
             # セルサイズが大きすぎます。x={x_length}・y={y_length}
-        else:
-            # fallback origin message
-            translated_message = message
+
         return translated_message
