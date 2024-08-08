@@ -61,7 +61,6 @@ class ProgressDialog(QDialog):
         # translate in this QDialog class to be detected by QLinguist.
         if message == "Set the output file":
             translated_message = self.tr("Set the output file")
-            # 保存ファイルを選択してください
         elif message == "Error":
             translated_message = self.tr("Error")
         elif message == "Aborting":
@@ -70,27 +69,20 @@ class ProgressDialog(QDialog):
             translated_message = self.tr("Are you sure to cancel process?")
         elif message == "Output format is not checked.":
             translated_message = self.tr("Output format is not checked.")
-            # 出力形式にチェックを入れてください
         elif message == "Input DEM path is not defined.":
             translated_message = self.tr("Input DEM path is not defined.")
-            # DEMの入力先パスを入力してください
         elif message == "GeoTIFF output path is not defined.":
             translated_message = self.tr("GeoTIFF output path is not defined.")
-            # GeoTIFFの出力先パスを入力してください
         elif message == "Terrain RGB output path is not defined.":
             translated_message = self.tr("Terrain RGB output path is not defined.")
-            # Terrain RGBの出力先パスを入力してください
         elif message == "CRS of output file is not defined.":
             translated_message = self.tr("CRS of output file is not defined.")
-            # "DEMの出力CRSを入力してください"
         elif message == "Cannot find output folder.":
             translated_message = self.tr("Cannot find output folder.")
         elif message == "Completed":
             translated_message = self.tr("Completed")
-            # 完了
         elif message == "Process completed.":
             translated_message = self.tr("Process completed.")
-            # 処理が完了しました
 
         # Submodule errors
         elif message == "Converting XML files to Terrain RGB...":
@@ -99,15 +91,10 @@ class ProgressDialog(QDialog):
             translated_message = self.tr("Converting XML files to GeoTIFF DEM...")
         elif message == "Creating TIFF file...":
             translated_message = self.tr("Creating TIFF file...")
-
         elif message == "No XML file found in input folder.":
             translated_message = self.tr("No XML file found in input folder.")
-            # 指定ディレクトリに.xmlが存在しません
-
         elif message == "No XML file found in input zip file.":
             translated_message = self.tr("No XML file found in input zip file.")
-            # 指定のパスにxmlファイルが存在しません
-
         elif (
             message
             == "Only ZIP file, XML file, or folder conatining XML files are allowed."
@@ -115,17 +102,12 @@ class ProgressDialog(QDialog):
             translated_message = self.tr(
                 "Only ZIP file, XML file, or folder conatining XML files are allowed."
             )
-            # 指定できる形式は「xml」「.xmlが格納されたディレクトリ」「.xmlが格納された.zip」のみです
         elif message == "Only XML file format is allowed.":
             translated_message = self.tr("Only XML file format is allowed.")
-            # 指定できる形式は.xmlのみです
         elif message == "Incorrect XML file.":
             translated_message = self.tr("Incorrect XML file.")
-            # 不正なxmlです
         elif message == "Mixed mesh format (2nd mesh and 3rd mesh)":
             translated_message = self.tr("Mixed mesh format (2nd mesh and 3rd mesh)")
-            # 2次メッシュと3次メッシュが混合しています。
-
         elif message == "Warning":
             translated_message = self.tr("Warning")
         elif message.split(":")[0] == "Incorrect Mesh code":
