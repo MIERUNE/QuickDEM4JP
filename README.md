@@ -35,4 +35,4 @@ https://fgd.gsi.go.jp/download
 
 - 入力先、出力形式、出力先とオプションなどを設定し、OKボタンを押して実行する。
 
-![](./docs/img/ui_ja.png)
+<img src="./docs/img/ui_ja.png" alt="" width="500">
