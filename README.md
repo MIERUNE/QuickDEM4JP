@@ -24,12 +24,12 @@ You can find the DEM data in XML format for any location on the following site: 
 
 このQGISプラグインは、国土地理院のDEM XMLファイルをGeoTIFFおよびTerrain RGB形式に変換する。
 
-DEMデータをXML形式で以下のサイトに掲載する。
+DEM XMLファイルは、以下のサイトからダウンロードできる。
 https://fgd.gsi.go.jp/download
 
 ## 使い方
 
-- プラグインはメニューのPlugin -> QuickDEM4JPに追加される。
+- プラグインはメニューバーのプラグイン -> QuickDEM4JPに追加される。
 - 以下のアイコンはツールバーにも表示される。
 
 ![](./icon.png)
