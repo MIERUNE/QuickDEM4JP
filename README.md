@@ -1,20 +1,39 @@
 # QuickDEM4JP
+[English](#Overview) / [日本語](#概要)
 
-## Overview
 ![](./docs/img/1.gif)
+## Overview
 
-This is QGIS plugin to convert DEM XML files, provided by Geospatial Information Authority of Japan(GSI) to GeoTiff and Terrain RGB format.
+This QGIS plugin converts DEM XML files from the Geospatial Information Authority of Japan (GSI) to GeoTIFF and Terrain RGB formats.
 
-You can find the DEM data in XML format for any location from the following site. https://fgd.gsi.go.jp/download
+You can find the DEM data in XML format for any location on the following site: https://fgd.gsi.go.jp/download
 
 ## Usage
 
-- The plugin will be added Plugin --> QuickDEM4JP.
-- Or you will find this icon on QGIS toolbar.
+- The plugin will be added under Plugin -> QuickDEM4JP in the menu.
+- You can also find this icon on the QGIS toolbar.
 
 ![](./icon.png)
 
-- Choose input type('xml'または'xml'を含む'zip' / 'xml'を含むフォルダ), input DEM path, output type(GeoTiff / Terrain RGB), output path and CRS of outputfile, then click OK.
-- The outputfile will be added to the map canvas when the checkbox (アルゴリズムの終了後、QGIS上で出力ファイルを開く) is checked.
+- Select the input format, DEM path, output type (GeoTIFF or Terrain RGB), output path, and CRS. Check any options if needed, then click OK.
 
-![](./docs/img/1.png)
+<img src="./docs/img/ui_en.png" alt="" width="500">
+
+
+## 概要
+
+このQGISプラグインは、国土地理院のDEM XMLファイルをGeoTIFFおよびTerrain RGB形式に変換する。
+
+DEM XMLファイルは、以下のサイトからダウンロードできる。
+https://fgd.gsi.go.jp/download
+
+## 使い方
+
+- プラグインはメニューバーのプラグイン -> QuickDEM4JPに追加される。
+- 以下のアイコンはツールバーにも表示される。
+
+![](./icon.png)
+
+- 入力先、出力形式、出力先とオプションなどを設定し、OKボタンを押して実行する。
+
+<img src="./docs/img/ui_ja.png" alt="" width="500">
