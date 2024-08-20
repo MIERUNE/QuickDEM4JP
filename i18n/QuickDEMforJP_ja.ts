@@ -47,119 +47,124 @@
         <translation type="unfinished">保存ファイルを選択してください</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="66"/>
+        <location filename="../progress_dialog.py" line="64"/>
         <source>Error</source>
         <translation type="unfinished">エラー</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="68"/>
+        <location filename="../progress_dialog.py" line="65"/>
         <source>Aborting</source>
         <translation type="unfinished">確認</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="70"/>
+        <location filename="../progress_dialog.py" line="66"/>
         <source>Are you sure to cancel process?</source>
         <translation type="unfinished">処理を中断し、以降の処理をスキップしてよろしいですか？</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="72"/>
+        <location filename="../progress_dialog.py" line="69"/>
         <source>Output format is not checked.</source>
         <translation type="unfinished">出力形式にチェックを入れてください</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="75"/>
+        <location filename="../progress_dialog.py" line="70"/>
         <source>Input DEM path is not defined.</source>
         <translation type="unfinished">DEMの入力先パスを入力してください</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="78"/>
+        <location filename="../progress_dialog.py" line="71"/>
         <source>GeoTIFF output path is not defined.</source>
         <translation type="unfinished">GeoTIFFの出力先パスを入力してください</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="81"/>
+        <location filename="../progress_dialog.py" line="74"/>
         <source>Terrain RGB output path is not defined.</source>
         <translation type="unfinished">Terrain RGBの出力先パスを入力してください</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="84"/>
+        <location filename="../progress_dialog.py" line="77"/>
         <source>CRS of output file is not defined.</source>
         <translation type="unfinished">DEMの出力CRSを入力してください</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="87"/>
+        <location filename="../progress_dialog.py" line="80"/>
         <source>Cannot find output folder.</source>
         <translation type="unfinished">出力フォルダー先が存在していません。</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="89"/>
+        <location filename="../progress_dialog.py" line="81"/>
         <source>Completed</source>
         <translation type="unfinished">完了</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="92"/>
+        <location filename="../progress_dialog.py" line="82"/>
         <source>Process completed.</source>
         <translation type="unfinished">処理が完了しました</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="97"/>
+        <location filename="../progress_dialog.py" line="84"/>
         <source>Converting XML files to Terrain RGB...</source>
         <translation type="unfinished">XMLファイルからTerrain RGBへの変換処理中...</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="99"/>
+        <location filename="../progress_dialog.py" line="87"/>
         <source>Converting XML files to GeoTIFF DEM...</source>
         <translation type="unfinished">XMLファイルからGeoTIFFへの変換処理中...</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="101"/>
+        <location filename="../progress_dialog.py" line="90"/>
         <source>Creating TIFF file...</source>
         <translation type="unfinished">TIFFファイルを作成中...</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="104"/>
+        <location filename="../progress_dialog.py" line="91"/>
         <source>No XML file found in input folder.</source>
         <translation type="unfinished">指定ディレクトリに.xmlが存在しません</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="108"/>
+        <location filename="../progress_dialog.py" line="94"/>
         <source>No XML file found in input zip file.</source>
         <translation type="unfinished">指定のパスにxmlファイルが存在しません</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="115"/>
+        <location filename="../progress_dialog.py" line="97"/>
         <source>Only ZIP file, XML file, or folder conatining XML files are allowed.</source>
         <translation type="unfinished">指定できる形式は「xml」「.xmlが格納されたディレクトリ」「.xmlが格納された.zip」のみです</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="120"/>
+        <location filename="../progress_dialog.py" line="100"/>
         <source>Only XML file format is allowed.</source>
         <translation type="unfinished">指定できる形式は.xmlのみです</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="123"/>
+        <location filename="../progress_dialog.py" line="103"/>
         <source>Incorrect XML file.</source>
         <translation type="unfinished">不正なxmlです</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="126"/>
+        <location filename="../progress_dialog.py" line="104"/>
         <source>Mixed mesh format (2nd mesh and 3rd mesh)</source>
         <translation type="unfinished">2次メッシュと3次メッシュが混合しています。</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="130"/>
+        <location filename="../progress_dialog.py" line="110"/>
         <source>Warning</source>
         <translation type="unfinished">確認</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="132"/>
+        <location filename="../progress_dialog.py" line="118"/>
         <source>Incorrect Mesh code</source>
         <translation type="unfinished">メッシュコードが不正です</translation>
     </message>
     <message>
-        <location filename="../progress_dialog.py" line="137"/>
+        <location filename="../progress_dialog.py" line="123"/>
         <source>Image size is too large</source>
         <translation type="unfinished">セルサイズが大きすぎます </translation>
+    </message>
+    <message>
+        <location filename="../progress_dialog.py" line="107"/>
+        <source>Output DEM has no elevation data.</source>
+        <translation type="unfinished">出力DEMデータに標高データが含まれていません。</translation>
     </message>
 </context>
 <context>
