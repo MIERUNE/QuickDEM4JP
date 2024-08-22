@@ -104,6 +104,9 @@ class ProgressDialog(QDialog):
             "Mixed mesh format (2nd mesh and 3rd mesh)": self.tr(
                 "Mixed mesh format (2nd mesh and 3rd mesh)"
             ),
+            "Output DEM has no elevation data.": self.tr(
+                "Output DEM has no elevation data."
+            ),
             "Warning": self.tr("Warning"),
         }
         translated_message = message_dic.get(
