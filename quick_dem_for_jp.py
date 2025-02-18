@@ -43,7 +43,7 @@ class QuickDEMforJP:
         self.icon_path = os.path.join(self.plugin_dir, "icon.png")
         # initialize locale
         if QSettings().value("locale/userLocale") is not None:
-            locale = QSettings().value("locale/userLocale")[0:2]
+            locale = str(QSettings().value("locale/userLocale"))[0:2]
         else:
             locale = "en"
         locale_path = os.path.join(
