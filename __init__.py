@@ -31,5 +31,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     :type iface: QgsInterface
     """
     #
-    from .quick_dem_for_jp import QuickDEMforJP
+    from .plugin import QuickDEMforJP
     return QuickDEMforJP(iface)

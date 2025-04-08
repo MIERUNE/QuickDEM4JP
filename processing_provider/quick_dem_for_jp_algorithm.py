@@ -20,24 +20,29 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.PyQt.QtWidgets import QPushButton
+
+import os
+
+
 
 from qgis.PyQt.QtCore import QCoreApplication
-from qgis.core import (QgsProcessing,
-                       QgsFeatureSink,
-                       QgsProcessingException,
+from qgis.core import (QgsProcessingException,
                        QgsProcessingAlgorithm,
-                       QgsProcessingParameterFeatureSink,
+                       QgsProcessingParameterRasterDestination,
                        QgsProcessingParameterFile,
                        QgsProcessingParameterCrs,
                        QgsProcessingParameterBoolean)
-from qgis import processing
+
+
+from ..convert_fgd_dem.src.convert_fgd_dem.converter import Converter
+
+
 
 _DESCRIPTION = """
-Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan <a href='https://fgd.gsi.go.jp/download/menu.php'>on the web</a>. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff.
-	国土地理院が提供する<a href='https://fgd.gsi.go.jp/download/menu.php'>基盤地図情報数値標高モデル(DEM)</a>のXML形式及びそのZIPファイルを GeoTIFF形式のDEMとTerrain RGBに変換します。
-tracker=https://github.com/MIERUNE/QuickDEM4JP/issues
-repository=https://github.com/MIERUNE/QuickDEM4JP
+Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan <a href='https://service.gsi.go.jp/kiban/'>on the web</a>. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff.
+	国土地理院が提供する<a href='https://service.gsi.go.jp/kiban/'>基盤地図情報数値標高モデル(DEM)</a>のXML形式及びそのZIPファイルを GeoTIFF形式のDEMとTerrain RGBに変換します。
+tracker=<a href='https://github.com/MIERUNE/QuickDEM4JP/issues'>https://github.com/MIERUNE/QuickDEM4JP/issues</a>
+repository=<a href='https://github.com/MIERUNE/QuickDEM4JP'>https://github.com/MIERUNE/QuickDEM4JP</a>
 """
 
 class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
@@ -47,7 +52,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
     OUTPUT_TERRAINRGB = 'OUTPUT_TERRAINRGB'
     INCLUDE_CHIKUGAI = "INCLUDE_CHIKUGAI"
     CRS = "CRS"
-    SET_0M_SEALEVEL = "SET_0M_SEALEVEL"
+    SEA_AT_ZERO = "SEA_AT_ZERO"
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
@@ -71,10 +76,6 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
     def shortHelpString(self):
         return self.tr(_DESCRIPTION)
     
-    """
-    def helpUrl(self):
-        return "https://fgd.gsi.go.jp/download/"
-    """
 
 
     def initAlgorithm(self, config=None):
@@ -88,15 +89,15 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         )
 
         self.addParameter(
-            QgsProcessingParameterFeatureSink(
+            QgsProcessingParameterRasterDestination(
                 self.OUTPUT_GEOTIFF,
                 self.tr('GeoTiff'),
-                createByDefault = False,
+                optional=True
             )
         )
 
         self.addParameter(
-            QgsProcessingParameterFeatureSink(
+            QgsProcessingParameterRasterDestination(
                 self.OUTPUT_TERRAINRGB,
                 self.tr('Terrain RGB'),
                 optional=True,
@@ -111,7 +112,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         )
         self.addParameter(
             QgsProcessingParameterBoolean(
-                self.SET_0M_SEALEVEL,
+                self.SEA_AT_ZERO,
                 self.tr("海域標高を0mに設定する"),
                 defaultValue=False,
             )
@@ -120,77 +121,58 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
 
     def processAlgorithm(self, parameters, context, feedback):
 
-        # Input .zip or .xml file
-        filename = self.parameterAsFile(parameters, self.INPUT, context)
-        if filename is None:
-            raise QgsProcessingException(
-                self.invalidSourceError(parameters, self.INPUT)
-            )  # pragma: no cover
+
+        import_path = self.parameterAsFile(parameters, self.INPUT, context)
+
+        output_epsg = self.parameterAsCrs(parameters, self.CRS, context)
+        output_path = self.parameterAsOutputLayer(parameters,self.OUTPUT_GEOTIFF,context)
+        output_path_terrain = self.parameterAsOutputLayer(parameters,self.OUTPUT_TERRAINRGB,context)
+        sea_at_zero = self.parameterAsBool(parameters,self.SEA_AT_ZERO,context)
+
+        if not output_path and not output_path_terrain:
+            feedback.reportError("出力ファイルが設定されていません。GeoTiffかTerrain RGBの出力を指定してください")
+            return {}
         
-        print(filename)
+        results = {}
 
-
-        """
-        (sink, dest_id) = self.parameterAsSink(
-            parameters,
-            self.OUTPUT,
-            context,
-            source.fields(),
-            source.wkbType(),
-            source.sourceCrs()
-        )
-
-        # Send some information to the user
-        feedback.pushInfo('CRS is {}'.format(source.sourceCrs().authid()))
-
-        # If sink was not created, throw an exception to indicate that the algorithm
-        # encountered a fatal error. The exception text can be any string, but in this
-        # case we use the pre-built invalidSinkError method to return a standard
-        # helper text for when a sink cannot be evaluated
-        if sink is None:
-            raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))
-
-        # Compute the number of steps to display within the progress bar and
-        # get features from source
-        total = 100.0 / source.featureCount() if source.featureCount() else 0
-        features = source.getFeatures()
-
-        for current, feature in enumerate(features):
-            # Stop the algorithm if cancel button has been clicked
-            if feedback.isCanceled():
-                break
-
-            # Add a feature in the sink
-            sink.addFeature(feature, QgsFeatureSink.FastInsert)
-
-            # Update the progress bar
-            feedback.setProgress(int(current * total))
-
-        # To run another Processing algorithm as part of this algorithm, you can use
-        # processing.run(...). Make sure you pass the current context and feedback
-        # to processing.run to ensure that all temporary layer outputs are available
-        # to the executed algorithm, and that the executed algorithm can send feedback
-        # reports to the user (and correctly handle cancellation and progress reports!)
-        if False:
-            buffered_layer = processing.run("native:buffer", {
-                'INPUT': dest_id,
-                'DISTANCE': 1.5,
-                'SEGMENTS': 5,
-                'END_CAP_STYLE': 0,
-                'JOIN_STYLE': 0,
-                'MITER_LIMIT': 2,
-                'DISSOLVE': False,
-                'OUTPUT': 'memory:'
-            }, context=context, feedback=feedback)['OUTPUT']
         
-        
+        try:
+            if output_path:
+                filename = os.path.basename(output_path)
+                if not filename.lower().endswith(".tif"):
+                    filename += ".tif"
 
-        # Return the results of the algorithm. In this case our only result is
-        # the feature sink which contains the processed features, but some
-        # algorithms may return multiple feature sinks, calculated numeric
-        # statistics, etc. These should all be included in the returned
-        # dictionary, with keys matching the feature corresponding parameter
-        # or output names.
-        return {self.OUTPUT: dest_id}
-        """
-        
+                feedback.pushInfo("GeoTiff 変換開始...")
+                Converter(
+                    import_path=import_path,
+                    output_path=os.path.dirname(output_path),
+                    output_epsg=output_epsg.authid(),
+                    file_name=filename,
+                    rgbify=False,
+                    sea_at_zero=sea_at_zero
+                ).run()
+                results[self.OUTPUT_GEOTIFF] = output_path
+
+            if output_path_terrain:
+                filename = os.path.basename(output_path_terrain)
+                if not filename.lower().endswith(".tif"):
+                    filename += ".tif"
+
+                feedback.pushInfo("Terrain RGB 変換開始...")
+                Converter(
+                    import_path=import_path,
+                    output_path=os.path.dirname(output_path_terrain),
+                    output_epsg=output_epsg.authid(),
+                    file_name=filename,
+                    rgbify=True,
+                    sea_at_zero=sea_at_zero
+                ).run()
+                results[self.OUTPUT_TERRAINRGB] = output_path_terrain
+                
+
+            feedback.pushInfo("変換が正常に完了しました。")
+
+        except Exception as e:
+            raise QgsProcessingException(f"変換中にエラーが発生しました: {str(e)}")
+
+        return results
