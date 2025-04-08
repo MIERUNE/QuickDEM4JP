@@ -25,11 +25,16 @@
 from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction
+from qgis.core import QgsApplication
+
 
 # Import the code for the dialog
 from .contents import Contents
 
 import os.path
+
+
+from .processing_provider.quick_dem_for_jp_provider import QuickDEMforJPProvider
 
 
 class QuickDEMforJP:
@@ -105,6 +110,10 @@ class QuickDEMforJP:
 
         return action
 
+    def initProcessing(self):
+        self.provider = QuickDEMforJPProvider()
+        QgsApplication.processingRegistry().addProvider(self.provider)
+	
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
@@ -117,12 +126,15 @@ class QuickDEMforJP:
 
         # will be set False in run()
         self.first_start = True
+        
+        self.initProcessing()
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginMenu(self.tr("&Quick_DEM_for_JP"), action)
             self.iface.removeToolBarIcon(action)
+            QgsApplication.processingRegistry().removeProvider(self.provider)
 
     def dialog_show(self):
         self.contents = Contents(self.iface)
