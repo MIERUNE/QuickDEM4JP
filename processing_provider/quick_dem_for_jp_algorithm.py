@@ -83,7 +83,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFile(
                 self.INPUT,
-                self.tr("DEM"),
+                self.tr("DEM（.xmlを含むzip/.xml）"),
                 fileFilter=self.tr("DEM (*.xml *.zip)"),
             )
         )
