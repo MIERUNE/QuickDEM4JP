@@ -101,7 +101,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
                 self.OUTPUT_TERRAINRGB,
                 self.tr('Terrain RGB'),
                 optional=True,
-                createByDefault = False,
+                createByDefault = False
             )
         )
         self.addParameter(

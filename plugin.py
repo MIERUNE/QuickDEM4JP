@@ -1,17 +1,16 @@
 
 import contextlib
 
-from PyQt5.QtWidgets import QAction, QMenu, QToolButton
+from PyQt5.QtWidgets import QAction, QToolButton
 from qgis.core import QgsApplication
 from qgis.gui import QgisInterface
 
 
 from .processing_provider.quick_dem_for_jp_provider import QuickDEMforJPProvider
 
-with contextlib.suppress(ImportError):
-    from processing import execAlgorithmDialog
+from processing import execAlgorithmDialog
 
-class QuickDEMforJP():
+class QuickDEMforJP:
     def __init__(self, iface: QgisInterface):
         self.iface = iface
     
