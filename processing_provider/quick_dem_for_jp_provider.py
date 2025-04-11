@@ -16,7 +16,7 @@ class QuickDEMforJPProvider(QgsProcessingProvider):
         return 'quickdemforjp'
 
     def name(self, *args, **kwargs):
-        return self.tr('Quick DEM for JP')
+        return self.tr('QuickDEM4JP')
 
     def icon(self):
         path = (Path(__file__).parent / "../icon.png").resolve()

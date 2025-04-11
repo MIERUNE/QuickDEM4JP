@@ -50,7 +50,6 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
     INPUT = 'INPUT'
     OUTPUT_GEOTIFF = 'OUTPUT_GEOTIFF'
     OUTPUT_TERRAINRGB = 'OUTPUT_TERRAINRGB'
-    INCLUDE_CHIKUGAI = "INCLUDE_CHIKUGAI"
     CRS = "CRS"
     SEA_AT_ZERO = "SEA_AT_ZERO"
 
@@ -70,7 +69,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         return None
 
     def displayName(self):
-        return self.tr('Quick DEM for JP')
+        return self.tr('QuickDEM4JP')
 
 
     def shortHelpString(self):
@@ -91,7 +90,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterRasterDestination(
                 self.OUTPUT_GEOTIFF,
-                self.tr('GeoTiff'),
+                self.tr('GeoTiffの出力先'),
                 optional=True
             )
         )
@@ -99,7 +98,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterRasterDestination(
                 self.OUTPUT_TERRAINRGB,
-                self.tr('Terrain RGB'),
+                self.tr('Terrain RGBの出力先'),
                 optional=True,
                 createByDefault = False
             )
@@ -108,6 +107,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
             QgsProcessingParameterCrs(
                 self.CRS,
                 self.tr('CRS'),
+                defaultValue='EPSG:4326'
             )
         )
         self.addParameter(
