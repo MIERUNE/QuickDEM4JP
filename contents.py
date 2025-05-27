@@ -266,7 +266,7 @@ class Contents:
             self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(terrain_path)
 
     def on_download_page_clicked(self):
-        webbrowser.open("https://fgd.gsi.go.jp/download/")
+        webbrowser.open("https://service.gsi.go.jp/kiban/app/map/?search=dem")
         return
 
     def on_abort_clicked(self, thread, progress_dialog: ProgressDialog) -> None:
