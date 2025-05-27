@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from qgis.core import QgsProcessingProvider
-from PyQt5.QtGui import QIcon
+from qgis.PyQt.QtGui import QIcon
 
 from .quick_dem_for_jp_algorithm import QuickDEMforJPProcessingAlgorithm
 

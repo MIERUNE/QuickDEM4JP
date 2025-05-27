@@ -26,7 +26,7 @@ import webbrowser
 
 from qgis.core import QgsProject, QgsRasterLayer
 from qgis.gui import QgsFileWidget
-from PyQt5.QtWidgets import QMessageBox
+from qgis.PyQt.QtWidgets import QMessageBox
 
 from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 from .convert_fgd_dem.src.convert_fgd_dem.converter import Converter
