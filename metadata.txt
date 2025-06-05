@@ -9,13 +9,14 @@
 [general]
 name=QuickDEM4JP
 qgisMinimumVersion=3.16
+supportsQt6=True
 description=Convert DEM XML files, provided by Geospatial Information Authority of Japan(GSI) to DEM GeoTiff and/or Terrain RGB format GeoTiff.
 version={{PLUGIN_VERSION}}
 author=MIERUNE Inc.
 email=info@mierune.co.jp
 
-about=Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan <a href='https://fgd.gsi.go.jp/download/menu.php'>on the web</a>. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff.
-	国土地理院が提供する<a href='https://fgd.gsi.go.jp/download/menu.php'>基盤地図情報数値標高モデル(DEM)</a>のXML形式及びそのZIPファイルを GeoTIFF形式のDEMとTerrain RGBに変換します。
+about=Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan <a href='https://service.gsi.go.jp/kiban/app/map/?search=dem'>on the web</a>. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff.
+	国土地理院が提供する<a href='https://service.gsi.go.jp/kiban/app/map/?search=dem'>基盤地図情報数値標高モデル(DEM)</a>のXML形式及びそのZIPファイルを GeoTIFF形式のDEMとTerrain RGBに変換します。
 tracker=https://github.com/MIERUNE/QuickDEM4JP/issues
 repository=https://github.com/MIERUNE/QuickDEM4JP
 # End of mandatory metadata

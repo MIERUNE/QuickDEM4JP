@@ -26,7 +26,7 @@ import webbrowser
 
 from qgis.core import QgsProject, QgsRasterLayer
 from qgis.gui import QgsFileWidget
-from PyQt5.QtWidgets import QMessageBox
+from qgis.PyQt.QtWidgets import QMessageBox
 
 from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 from .convert_fgd_dem.src.convert_fgd_dem.converter import Converter
@@ -266,7 +266,7 @@ class Contents:
             self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(terrain_path)
 
     def on_download_page_clicked(self):
-        webbrowser.open("https://fgd.gsi.go.jp/download/")
+        webbrowser.open("https://service.gsi.go.jp/kiban/app/map/?search=dem")
         return
 
     def on_abort_clicked(self, thread, progress_dialog: ProgressDialog) -> None:

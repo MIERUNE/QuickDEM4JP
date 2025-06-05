@@ -23,16 +23,13 @@
 
 import os
 
-
-
-from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import (QgsProcessingException,
                        QgsProcessingAlgorithm,
                        QgsProcessingParameterRasterDestination,
                        QgsProcessingParameterFile,
                        QgsProcessingParameterCrs,
                        QgsProcessingParameterBoolean)
-
+from qgis.PyQt.QtCore import QCoreApplication
 
 from ..convert_fgd_dem.src.convert_fgd_dem.converter import Converter
 
