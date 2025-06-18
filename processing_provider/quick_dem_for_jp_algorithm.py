@@ -139,14 +139,14 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
                 if not filename.lower().endswith(".tif"):
                     filename += ".tif"
 
-                feedback.pushInfo("GeoTiff 変換開始...")
                 Converter(
                     import_path=import_path,
                     output_path=os.path.dirname(output_path),
                     output_epsg=output_epsg.authid(),
                     file_name=filename,
                     rgbify=False,
-                    sea_at_zero=sea_at_zero
+                    sea_at_zero=sea_at_zero,
+                    feedback=feedback
                 ).run()
                 results[self.OUTPUT_GEOTIFF] = output_path
 
@@ -155,14 +155,14 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
                 if not filename.lower().endswith(".tif"):
                     filename += ".tif"
 
-                feedback.pushInfo("Terrain RGB 変換開始...")
                 Converter(
                     import_path=import_path,
                     output_path=os.path.dirname(output_path_terrain),
                     output_epsg=output_epsg.authid(),
                     file_name=filename,
                     rgbify=True,
-                    sea_at_zero=sea_at_zero
+                    sea_at_zero=sea_at_zero,
+                    feedback=feedback
                 ).run()
                 results[self.OUTPUT_TERRAINRGB] = output_path_terrain
                 
