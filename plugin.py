@@ -24,6 +24,7 @@ class QuickDEMforJP:
         self.algorithm = QuickDEMforJPProcessingAlgorithm()
         if not self.provider.algorithm("quickdemforjp"):
             self.provider.addAlgorithm(self.algorithm)
+            self.provider.refreshAlgorithms()
 
     def initGui(self):
         self.initProcessing()
@@ -34,9 +35,12 @@ class QuickDEMforJP:
             self.teardown_algorithms_tool_button()
 
         if hasattr(self, "provider"):
+            for alg in self.provider.algorithms():
+                if alg.name != self.algorithm.name():
+                    self.provider.addAlgorithm(alg)
             self.provider.refreshAlgorithms()
-            QgsApplication.processingRegistry().removeProvider(self.provider)
-            del self.provider
+            # QgsApplication.processingRegistry().removeProvider(self.provider)
+            # del self.provider
             
     def setup_algorithms_tool_button(self):
         if hasattr(self, "toolButtonAction"):
