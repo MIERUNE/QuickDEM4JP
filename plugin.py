@@ -5,7 +5,8 @@ from qgis.core import QgsApplication
 from qgis.gui import QgisInterface
 from qgis.PyQt.QtWidgets import QAction, QToolButton
 
-from .processing_provider.quick_dem_for_jp_provider import QuickDEMforJPProvider
+from .processing_provider.quick_dem_for_jp_provider import MieruneProvider
+from .processing_provider.quick_dem_for_jp_algorithm import QuickDEMforJPProcessingAlgorithm
 
 from processing import execAlgorithmDialog
 
@@ -14,9 +15,16 @@ class QuickDEMforJP:
         self.iface = iface
     
     def initProcessing(self):
-        self.provider = QuickDEMforJPProvider()
-        QgsApplication.processingRegistry().addProvider(self.provider)
-	
+        processing_registry = QgsApplication.processingRegistry()
+        self.provider = processing_registry.providerById("mierune")
+        if not self.provider:
+            self.provider = MieruneProvider()
+            QgsApplication.processingRegistry().addProvider(self.provider)
+
+        self.algorithm = QuickDEMforJPProcessingAlgorithm()
+        if not self.provider.algorithm("quickdemforjp"):
+            self.provider.addAlgorithm(self.algorithm)
+
     def initGui(self):
         self.initProcessing()
         self.setup_algorithms_tool_button()
@@ -26,6 +34,7 @@ class QuickDEMforJP:
             self.teardown_algorithms_tool_button()
 
         if hasattr(self, "provider"):
+            self.provider.refreshAlgorithms()
             QgsApplication.processingRegistry().removeProvider(self.provider)
             del self.provider
             
@@ -34,10 +43,10 @@ class QuickDEMforJP:
             return  # すでに追加済みなら何もしない
 
         tool_button = QToolButton()
-        icon = self.provider.icon()
+        icon = self.algorithm.icon()
         default_action = QAction(icon, "Quick DEM for JP", self.iface.mainWindow())
         default_action.triggered.connect(
-            lambda: execAlgorithmDialog("quickdemforjp:quickdemforjp", {})
+            lambda: execAlgorithmDialog("mierune:quickdemforjp", {})
         )
         tool_button.setDefaultAction(default_action)
 

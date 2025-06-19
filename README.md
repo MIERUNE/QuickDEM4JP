@@ -13,7 +13,7 @@ You can find the DEM data in XML format for any location on the following site: 
 - The plugin will be added under Plugin -> QuickDEM4JP in the menu.
 - You can also find this icon on the QGIS toolbar.
 
-![](./icon.png)
+![](./imgs/icon.png)
 
 - Select the input format, DEM path, output type (GeoTIFF or Terrain RGB), output path, and CRS. Check any options if needed, then click OK.
 
@@ -32,7 +32,7 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 - プラグインはメニューバーのプラグイン -> QuickDEM4JPに追加される。
 - 以下のアイコンはツールバーにも表示される。
 
-![](./icon.png)
+![](./imgs/icon.png)
 
 - 入力先、出力形式、出力先とオプションなどを設定し、OKボタンを押して実行する。
 

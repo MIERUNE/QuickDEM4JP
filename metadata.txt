@@ -31,7 +31,7 @@ tags=DEM, GeoTiff, Terrain, GSI, Terrain RGB, XML, 国土地理院, 標高
 
 homepage=https://github.com/MIERUNE/QuickDEM4JP
 category=Plugins
-icon=icon.png
+icon=imgs/icon.png
 # experimental flag
 experimental=False
 

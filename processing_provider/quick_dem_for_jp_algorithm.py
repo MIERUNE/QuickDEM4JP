@@ -22,6 +22,7 @@
 """
 
 import os
+from pathlib import Path
 
 from qgis.core import (QgsProcessingException,
                        QgsProcessingAlgorithm,
@@ -30,6 +31,7 @@ from qgis.core import (QgsProcessingException,
                        QgsProcessingParameterCrs,
                        QgsProcessingParameterBoolean)
 from qgis.PyQt.QtCore import QCoreApplication
+from qgis.PyQt.QtGui import QIcon
 
 from ..convert_fgd_dem.src.convert_fgd_dem.converter import Converter
 
@@ -68,6 +70,9 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
     def displayName(self):
         return self.tr('QuickDEM4JP')
 
+    def icon(self):
+        path = (Path(__file__).parent / "../imgs/icon.png").resolve()
+        return QIcon(str(path))
 
     def shortHelpString(self):
         return self.tr(_DESCRIPTION)
