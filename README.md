@@ -15,7 +15,7 @@ You can find the DEM data in XML format for any location on the following site: 
 
 - The plugin will be added through the following icon to the plugin toolbar.
 
-<img src="./icon.png" alt="" width="200">
+<img src="./icon.png" alt="" width="80">
 
 - You can also find it in the Processing Toolbox -> QuickDEM4JP.
 
@@ -38,7 +38,7 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 
 - プラグインは以下のアイコンはツールバーにも追加される。
 
-<img src="./icon.png" alt="" width="200">
+<img src="./icon.png" alt="" width="80">
 
 - プロセッシングツールボックス -> QuickDEM4JPにも追加される。
 
