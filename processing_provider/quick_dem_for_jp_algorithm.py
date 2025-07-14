@@ -59,15 +59,15 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         return None
 
     def displayName(self):
-        return self.tr("QuickDEM4JP")
+        return self.tr("Load Japan DEM from XML file")
 
     def shortHelpString(self):
         return (
             self.tr(
-                "Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan <a href='https://service.gsi.go.jp/kiban/'>on the web</a>. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff.\n"
+                "Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan <a href='https://service.gsi.go.jp/kiban/'>on the web</a>. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff."
             )
-            + "\ntracker: <a href='https://github.com/MIERUNE/QuickDEM4JP/issues'>https://github.com/MIERUNE/QuickDEM4JP/issues</a>\n"
-            + "repository: <a href='https://github.com/MIERUNE/QuickDEM4JP'>https://github.com/MIERUNE/QuickDEM4JP</a>"
+            + "\nTracker: <a href='https://github.com/MIERUNE/QuickDEM4JP/issues'>https://github.com/MIERUNE/QuickDEM4JP/issues</a>"
+            + "\nRepository: <a href='https://github.com/MIERUNE/QuickDEM4JP'>https://github.com/MIERUNE/QuickDEM4JP</a>"
         )
 
     def initAlgorithm(self, config=None):

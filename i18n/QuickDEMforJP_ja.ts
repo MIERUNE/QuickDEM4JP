@@ -4,17 +4,6 @@
 <context>
     <name>QuickDEMforJPProcessingAlgorithm</name>
     <message>
-        <location filename="../processing_provider/quick_dem_for_jp_algorithm.py" line="62"/>
-        <source>QuickDEM4JP</source>
-        <translation type="unfinished">QuickDEM4JP</translation>
-    </message>
-    <message>
-        <location filename="../processing_provider/quick_dem_for_jp_algorithm.py" line="65"/>
-        <source>Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan &lt;a href=&apos;https://service.gsi.go.jp/kiban/&apos;&gt;on the web&lt;/a&gt;. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff.
-</source>
-        <translation type="unfinished">国土地理院が提供する&lt;a href=&apos;https://service.gsi.go.jp/kiban/&apos;&gt;基盤地図情報数値標高モデル(DEM)&lt;/a&gt;のXML形式及びそのZIPファイルを GeoTIFF形式のDEMとTerrain RGBに変換します。</translation>
-    </message>
-    <message>
         <location filename="../processing_provider/quick_dem_for_jp_algorithm.py" line="74"/>
         <source>DEM file (.xml or .zip containing .xml)</source>
         <translation type="unfinished">DEMファイル（.xmlを含むzip/.xml）</translation>
@@ -59,13 +48,23 @@
         <source>An error occured: {}</source>
         <translation type="unfinished">変換中にエラーが発生しました: {}</translation>
     </message>
+    <message>
+        <location filename="../processing_provider/quick_dem_for_jp_algorithm.py" line="65"/>
+        <source>Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan &lt;a href=&apos;https://service.gsi.go.jp/kiban/&apos;&gt;on the web&lt;/a&gt;. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff.</source>
+        <translation type="unfinished">国土地理院が提供する&lt;a href=&apos;https://service.gsi.go.jp/kiban/&apos;&gt;基盤地図情報数値標高モデル(DEM)&lt;/a&gt;のXML形式及びそのZIPファイルを GeoTIFF形式のDEMとTerrain RGBに変換します。</translation>
+    </message>
+    <message>
+        <location filename="../processing_provider/quick_dem_for_jp_algorithm.py" line="62"/>
+        <source>Load Japan DEM from XML file</source>
+        <translation type="unfinished">XMLファイルからDEMを読み込む</translation>
+    </message>
 </context>
 <context>
     <name>QuickDEMforJPProvider</name>
     <message>
         <location filename="../processing_provider/quick_dem_for_jp_provider.py" line="18"/>
         <source>QuickDEM4JP</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">QuickDEM4JP</translation>
     </message>
 </context>
 </TS>
