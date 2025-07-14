@@ -16,12 +16,12 @@
     <message>
         <location filename="../processing_provider/quick_dem_for_jp_algorithm.py" line="82"/>
         <source>Output DEM Geotiff</source>
-        <translation type="unfinished">GeoTiffの出力先</translation>
+        <translation type="unfinished">GeoTiffの出力</translation>
     </message>
     <message>
         <location filename="../processing_provider/quick_dem_for_jp_algorithm.py" line="88"/>
         <source>Output Terrain RGB</source>
-        <translation type="unfinished">Terrain RGBの出力先</translation>
+        <translation type="unfinished">Terrain RGBの出力</translation>
     </message>
     <message>
         <location filename="../processing_provider/quick_dem_for_jp_algorithm.py" line="96"/>
