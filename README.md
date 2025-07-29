@@ -24,9 +24,9 @@ You can find the DEM data in XML format for any location on the following site: 
 - Set the following parameters:
   - Input DEM data in XML file, or ZIP file containing XML files (required)
   - Output CRS (required)
+  - Set 0m to sea area : area specified with "sea" in input data will be set at 0m instead No data if this option is checked.  
   - Output DEM GeoTIFF file
   - Output Terrain RGB file
-  - Set 0m to sea area : area specified with "sea" in input data will be set at 0m instead No data if this option is checked.
 - Click OK to run.
 
 <img src="./docs/img/ui_en.png" alt="" width="500">
@@ -52,9 +52,8 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 - 以下のパラメータを設定
   - 入力DEMデータ：XMLファイル、またはXMLファイルを含むZIPファイル（必須）
   - 出力座標系（必須）
-  - GeoTIFF形式の出力ファイル
+  - 海域標高を0mに設定：このオプションがチェックされていると、入力データで「海水面」と「海水底面」と指定されているエリアはNoDataではなく0mに設定される  - GeoTIFF形式の出力ファイル
   - Terrain RGBの出力ファイル
-  - 海域標高を0mに設定：このオプションがチェックされていると、入力データで「海水面」と「海水底面」と指定されているエリアはNoDataではなく0mに設定される
 - 「OK」をクリックして実行
 
 <img src="./docs/img/ui_ja.png" alt="" width="500">
