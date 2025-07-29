@@ -13,7 +13,7 @@ You can find the DEM data in XML format for any location on the following site: 
 
 ## Usage
 
-- The plugin will be added through the following icon to the plugin toolbar.
+- The plugin is added to the plugin toolbar through the following icon.
 
 <img src="./icon.png" alt="" width="80">
 
@@ -35,8 +35,7 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 
 ## 使い方
 
-
-- プラグインは以下のアイコンはツールバーにも追加される。
+- プラグインは以下のアイコンはツールバーに追加される。
 
 <img src="./icon.png" alt="" width="80">
 
@@ -44,6 +43,6 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 
 <img src="./docs/img/processing_ja.png" alt="" width="500">
 
-- 入力先、出力形式、出力先とオプションなどを設定し、OKボタンを押して実行する。
+- 入力先、出力先とオプションなどを設定し、OKボタンを押して実行する。
 
 <img src="./docs/img/ui_ja.png" alt="" width="500">
