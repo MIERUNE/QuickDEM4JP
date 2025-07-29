@@ -21,7 +21,13 @@ You can find the DEM data in XML format for any location on the following site: 
 
 <img src="./docs/img/processing_en.png" alt="" width="500">
 
-- Select the input format, DEM path, output type (GeoTIFF or Terrain RGB), output path, and CRS. Check any options if needed, then click OK.
+- Set the following parameters:
+  - Input DEM data in XML file, or ZIP file containing XML files. (required)
+  - Output CRS (required)
+  - Output DEM in GeoTIFF file
+  - Output Terrain RGB file
+  - Set 0m to sea area : Area specified with "sea" will be set at 0m instead No data if this option is checked.
+- Click OK to run.
 
 <img src="./docs/img/ui_en.png" alt="" width="500">
 
