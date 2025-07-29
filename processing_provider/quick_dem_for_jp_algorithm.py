@@ -23,42 +23,35 @@
 
 import os
 
-from qgis.core import (QgsProcessingException,
-                       QgsProcessingAlgorithm,
-                       QgsProcessingParameterRasterDestination,
-                       QgsProcessingParameterFile,
-                       QgsProcessingParameterCrs,
-                       QgsProcessingParameterBoolean)
+from qgis.core import (
+    QgsProcessingException,
+    QgsProcessingAlgorithm,
+    QgsProcessingParameterRasterDestination,
+    QgsProcessingParameterFile,
+    QgsProcessingParameterCrs,
+    QgsProcessingParameterBoolean,
+)
 from qgis.PyQt.QtCore import QCoreApplication
 
 from ..convert_fgd_dem.src.convert_fgd_dem.converter import Converter
 
 
-
-_DESCRIPTION = """
-Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan <a href='https://service.gsi.go.jp/kiban/'>on the web</a>. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff.
-	国土地理院が提供する<a href='https://service.gsi.go.jp/kiban/'>基盤地図情報数値標高モデル(DEM)</a>のXML形式及びそのZIPファイルを GeoTIFF形式のDEMとTerrain RGBに変換します。
-tracker=<a href='https://github.com/MIERUNE/QuickDEM4JP/issues'>https://github.com/MIERUNE/QuickDEM4JP/issues</a>
-repository=<a href='https://github.com/MIERUNE/QuickDEM4JP'>https://github.com/MIERUNE/QuickDEM4JP</a>
-"""
-
 class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
-
-    INPUT = 'INPUT'
-    OUTPUT_GEOTIFF = 'OUTPUT_GEOTIFF'
-    OUTPUT_TERRAINRGB = 'OUTPUT_TERRAINRGB'
+    INPUT = "INPUT"
+    OUTPUT_GEOTIFF = "OUTPUT_GEOTIFF"
+    OUTPUT_TERRAINRGB = "OUTPUT_TERRAINRGB"
     CRS = "CRS"
     SEA_AT_ZERO = "SEA_AT_ZERO"
 
     def tr(self, string):
-        return QCoreApplication.translate('Processing', string)
+        return QCoreApplication.translate("QuickDEMforJPProcessingAlgorithm", string)
 
     def createInstance(self):
         return QuickDEMforJPProcessingAlgorithm()
 
     def name(self):
-        return 'quickdemforjp'
-    
+        return "quickdemforjp"
+
     def group(self):
         return None
 
@@ -66,73 +59,73 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         return None
 
     def displayName(self):
-        return self.tr('QuickDEM4JP')
-
+        return self.tr("Load Japan DEM from XML file")
 
     def shortHelpString(self):
-        return self.tr(_DESCRIPTION)
-    
-
+        return (
+            self.tr(
+                "Geospatial Information Authority of Japan(GSI) provides 1m, 5m and 10m DEM XML files of Japan <a href='https://service.gsi.go.jp/kiban/'>on the web</a>. This plugin imports XML files or XML included zip files and converts them to DEM GeoTiff and/or Terrain RGB format GeoTiff."
+            )
+            + "\nTracker: <a href='https://github.com/MIERUNE/QuickDEM4JP/issues'>https://github.com/MIERUNE/QuickDEM4JP/issues</a>"
+            + "\nRepository: <a href='https://github.com/MIERUNE/QuickDEM4JP'>https://github.com/MIERUNE/QuickDEM4JP</a>"
+        )
 
     def initAlgorithm(self, config=None):
-
         self.addParameter(
             QgsProcessingParameterFile(
                 self.INPUT,
-                self.tr("DEM（.xmlを含むzip/.xml）"),
+                self.tr("DEM file (.xml or .zip containing .xml)"),
                 fileFilter=self.tr("DEM (*.xml *.zip)"),
             )
         )
 
         self.addParameter(
             QgsProcessingParameterRasterDestination(
-                self.OUTPUT_GEOTIFF,
-                self.tr('GeoTiffの出力先'),
-                optional=True
+                self.OUTPUT_GEOTIFF, self.tr("Output DEM Geotiff"), optional=True
             )
         )
 
         self.addParameter(
             QgsProcessingParameterRasterDestination(
                 self.OUTPUT_TERRAINRGB,
-                self.tr('Terrain RGBの出力先'),
+                self.tr("Output Terrain RGB"),
                 optional=True,
-                createByDefault = False
+                createByDefault=False,
             )
         )
         self.addParameter(
             QgsProcessingParameterCrs(
-                self.CRS,
-                self.tr('CRS'),
-                defaultValue='EPSG:4326'
+                self.CRS, self.tr("CRS"), defaultValue="EPSG:4326"
             )
         )
         self.addParameter(
             QgsProcessingParameterBoolean(
                 self.SEA_AT_ZERO,
-                self.tr("海域標高を0mに設定する"),
+                self.tr("Set 0m to sea area"),
                 defaultValue=False,
             )
         )
-    
 
     def processAlgorithm(self, parameters, context, feedback):
-
-
         import_path = self.parameterAsFile(parameters, self.INPUT, context)
 
         output_epsg = self.parameterAsCrs(parameters, self.CRS, context)
-        output_path = self.parameterAsOutputLayer(parameters,self.OUTPUT_GEOTIFF,context)
-        output_path_terrain = self.parameterAsOutputLayer(parameters,self.OUTPUT_TERRAINRGB,context)
-        sea_at_zero = self.parameterAsBool(parameters,self.SEA_AT_ZERO,context)
+        output_path = self.parameterAsOutputLayer(
+            parameters, self.OUTPUT_GEOTIFF, context
+        )
+        output_path_terrain = self.parameterAsOutputLayer(
+            parameters, self.OUTPUT_TERRAINRGB, context
+        )
+        sea_at_zero = self.parameterAsBool(parameters, self.SEA_AT_ZERO, context)
 
         if not output_path and not output_path_terrain:
-            feedback.reportError("出力ファイルが設定されていません。GeoTiffかTerrain RGBの出力を指定してください")
+            feedback.reportError(
+                self.tr("DEM Geotiff and/or Terrain RGB output are not defined.")
+            )
             return {}
-        
+
         results = {}
 
-        
         try:
             if output_path:
                 filename = os.path.basename(output_path)
@@ -146,7 +139,7 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
                     file_name=filename,
                     rgbify=False,
                     sea_at_zero=sea_at_zero,
-                    feedback=feedback
+                    feedback=feedback,
                 ).run()
                 results[self.OUTPUT_GEOTIFF] = output_path
 
@@ -162,14 +155,13 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
                     file_name=filename,
                     rgbify=True,
                     sea_at_zero=sea_at_zero,
-                    feedback=feedback
+                    feedback=feedback,
                 ).run()
                 results[self.OUTPUT_TERRAINRGB] = output_path_terrain
-                
 
-            feedback.pushInfo("変換が正常に完了しました。")
+            feedback.pushInfo(self.tr("Conversion completed."))
 
         except Exception as e:
-            raise QgsProcessingException(f"変換中にエラーが発生しました: {str(e)}")
+            raise QgsProcessingException(self.tr("An error occured: {}").format(str(e)))
 
         return results
