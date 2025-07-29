@@ -1,6 +1,6 @@
 # QuickDEM4JP
 
-![](./docs/img/1.gif)
+![](./docs/img/quickdemdemo.gif)
 
 
 [English](#Overview) / [日本語](#概要)
@@ -19,7 +19,7 @@ You can find the DEM data in XML format for any location on the following site: 
 
 - You can also find it in the Processing Toolbox -> QuickDEM4JP.
 
-<img src="./docs/img/processing.png" alt="" width="500">
+<img src="./docs/img/processing_en.png" alt="" width="500">
 
 - Select the input format, DEM path, output type (GeoTIFF or Terrain RGB), output path, and CRS. Check any options if needed, then click OK.
 
@@ -42,7 +42,7 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 
 - プロセッシングツールボックス -> QuickDEM4JPにも追加される。
 
-<img src="./docs/img/processing.png" alt="" width="500">
+<img src="./docs/img/processing_ja.png" alt="" width="500">
 
 - 入力先、出力形式、出力先とオプションなどを設定し、OKボタンを押して実行する。
 
