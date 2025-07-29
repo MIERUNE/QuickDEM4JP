@@ -58,3 +58,8 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 - 「OK」をクリックして実行
 
 <img src="./docs/img/ui_ja.png" alt="" width="500">
+
+## Authors
+
+- MIERUNE Inc.
+- and all contributors
