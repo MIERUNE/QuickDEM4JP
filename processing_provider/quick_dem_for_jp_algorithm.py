@@ -29,7 +29,6 @@ from qgis.core import (
     QgsProcessingParameterRasterDestination,
     QgsProcessingParameterFile,
     QgsProcessingParameterCrs,
-    QgsProcessingParameterBoolean,
 )
 from qgis.PyQt.QtCore import QCoreApplication
 
@@ -41,7 +40,6 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
     OUTPUT_GEOTIFF = "OUTPUT_GEOTIFF"
     OUTPUT_TERRAINRGB = "OUTPUT_TERRAINRGB"
     CRS = "CRS"
-    SEA_AT_ZERO = "SEA_AT_ZERO"
 
     def tr(self, string):
         return QCoreApplication.translate("QuickDEMforJPProcessingAlgorithm", string)
@@ -98,13 +96,6 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
                 self.CRS, self.tr("CRS"), defaultValue="EPSG:4326"
             )
         )
-        self.addParameter(
-            QgsProcessingParameterBoolean(
-                self.SEA_AT_ZERO,
-                self.tr("Set 0m to sea area"),
-                defaultValue=False,
-            )
-        )
 
     def processAlgorithm(self, parameters, context, feedback):
         import_path = self.parameterAsFile(parameters, self.INPUT, context)
@@ -116,7 +107,6 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
         output_path_terrain = self.parameterAsOutputLayer(
             parameters, self.OUTPUT_TERRAINRGB, context
         )
-        sea_at_zero = self.parameterAsBool(parameters, self.SEA_AT_ZERO, context)
 
         if not output_path and not output_path_terrain:
             feedback.reportError(
@@ -138,7 +128,6 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
                     output_epsg=output_epsg.authid(),
                     file_name=filename,
                     rgbify=False,
-                    sea_at_zero=sea_at_zero,
                     feedback=feedback,
                 ).run()
                 results[self.OUTPUT_GEOTIFF] = output_path
@@ -154,7 +143,6 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
                     output_epsg=output_epsg.authid(),
                     file_name=filename,
                     rgbify=True,
-                    sea_at_zero=sea_at_zero,
                     feedback=feedback,
                 ).run()
                 results[self.OUTPUT_TERRAINRGB] = output_path_terrain
