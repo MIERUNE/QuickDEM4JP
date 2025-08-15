@@ -1,7 +1,10 @@
 # QuickDEM4JP
+
+![](./docs/img/quickdemdemo.gif)
+
+
 [English](#Overview) / [日本語](#概要)
 
-![](./docs/img/1.gif)
 ## Overview
 
 This QGIS plugin converts DEM XML files from the Geospatial Information Authority of Japan (GSI) to GeoTIFF and Terrain RGB formats.
@@ -10,12 +13,21 @@ You can find the DEM data in XML format for any location on the following site: 
 
 ## Usage
 
-- The plugin will be added under Plugin -> QuickDEM4JP in the menu.
-- You can also find this icon on the QGIS toolbar.
+- The plugin is added to the plugin toolbar through the following icon.
 
-![](./icon.png)
+<img src="./icon.png" alt="" width="80">
 
-- Select the input format, DEM path, output type (GeoTIFF or Terrain RGB), output path, and CRS. Check any options if needed, then click OK.
+- You can also find it in the Processing Toolbox -> QuickDEM4JP.
+
+<img src="./docs/img/processing_en.png" alt="" width="500">
+
+- Set the following parameters:
+  - Input DEM data in XML file, or ZIP file containing XML files (required)
+  - Output CRS (required)
+  - Set 0m to sea area : area specified with "sea" in input data will be set at 0m instead "No data" if this option is checked.
+  - Output DEM GeoTIFF file
+  - Output Terrain RGB file
+- Click OK to run.
 
 <img src="./docs/img/ui_en.png" alt="" width="500">
 
@@ -29,11 +41,25 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 
 ## 使い方
 
-- プラグインはメニューバーのプラグイン -> QuickDEM4JPに追加される。
-- 以下のアイコンはツールバーにも表示される。
+- プラグインは以下のアイコンがツールバーに追加され、それをクリックすることで使用できる。
 
-![](./icon.png)
+<img src="./icon.png" alt="" width="80">
 
-- 入力先、出力形式、出力先とオプションなどを設定し、OKボタンを押して実行する。
+- プロセッシングツールボックス -> QuickDEM4JPにも追加される。
+
+<img src="./docs/img/processing_ja.png" alt="" width="500">
+
+- 以下のパラメータを設定
+  - 入力DEMデータ：XMLファイル、またはXMLファイルを含むZIPファイル（必須）
+  - 出力座標系（必須）
+  - 海域標高を0mに設定：このオプションがチェックされていると、入力データで「海水面」または「海水底面」と指定されているエリアが、（NoDataではなく）0mとして設定される
+  - GeoTIFF形式の出力ファイル
+  - Terrain RGBの出力ファイル
+- 「OK」をクリックして実行
 
 <img src="./docs/img/ui_ja.png" alt="" width="500">
+
+## Authors
+
+- MIERUNE Inc.
+- and all contributors
