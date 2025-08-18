@@ -40,7 +40,7 @@ https://service.gsi.go.jp/kiban/app/map/?search=dem
 
 ## 使い方
 
-- プラグインは以下のアイコンはツールバーに追加される。
+- プラグインは以下のアイコンがツールバーに追加され、それをクリックすることで使用できる。
 
 <img src="./icon.png" alt="" width="80">
 
