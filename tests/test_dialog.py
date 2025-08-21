@@ -1,4 +1,4 @@
-from ..quick_dem_for_jp import QuickDEMforJP
+from ..plugin import QuickDEMforJP
 from ..contents import Contents
 
 
