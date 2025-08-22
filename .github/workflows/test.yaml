@@ -7,39 +7,34 @@ on:
     branches:
       - master
 
-env:
-  # Docker settings
-  DOCKER_IMAGE: qgis/qgis
-
 jobs:
-  Test-plugin:
+  Test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        docker_tags: [release-3_34]
-
+        qgis_image_tag: [release-3_22, release-3_28]
+    env:
+      OS: ubuntu
+      QGIS_IMAGE_TAG: ${{ matrix.qgis_image_tag }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Pull QGIS image
+        run: docker pull qgis/qgis:${{ matrix.qgis_image_tag }}
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
 
       - name: Export requirements.txt
         run: |
-          pip3 install uv
-          uv export -o requirements.txt --no-dev --no-hashes
+          uv export --extra dev > requirements.txt
 
-      - name: Docker pull and create qgis-testing-environment
-        run: |
-          docker pull "$DOCKER_IMAGE":${{ matrix.docker_tags }}
-          docker run -d --name qgis-testing-environment -v .:/tests_directory/plugin_dir -e DISPLAY=:99 "$DOCKER_IMAGE":${{ matrix.docker_tags }}
-
-      - name: Docker set up QGIS
-        run: |
-          docker exec qgis-testing-environment sh -c "qgis_setup.sh plugin_dir"
-          docker exec qgis-testing-environment sh -c "rm -f /root/.local/share/QGIS/QGIS3/profiles/default/python/plugins/plugin_dir"
-          docker exec qgis-testing-environment sh -c "ln -s /tests_directory/plugin_dir /root/.local/share/QGIS/QGIS3/profiles/default/python/plugins/plugin_dir"
-          docker exec qgis-testing-environment sh -c "pip3 install -r /tests_directory/plugin_dir/requirements.txt"
-
-      - name: Docker run plugin tests
-        run: |
-          docker exec qgis-testing-environment sh -c "qgis_testrunner.sh plugin_dir.test_suite.test_package"
+      - name: Run tests
+        run: >
+          docker run --rm --volume `pwd`:/app -w=/app qgis/qgis:${{ matrix.qgis_image_tag }} sh -c "
+            pip3 install --require-hashes --no-deps -r requirements.txt &&
+            PYTHONPATH=/app xvfb-run -s '+extension GLX -screen 0 1024x768x24' pytest -v --cov --cov-report=xml --cov-report=term
+          "
