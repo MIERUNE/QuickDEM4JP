@@ -10,7 +10,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/33/d5/9b8482ed572be40d51c3fcbb87451e446e56b5e19487cd60340b8ef51eb4/PyQt5_stubs-5.15.6.0-py3-none-any.whl", hash = "sha256:7fb8177c72489a8911f021b7bd7c33f12c87f6dba92dcef3fdcdb5d9400f0f3f", size = 433328 },
 ]
 
-
 [[package]]
 name = "quickdem4jp"
 version = "1.0.0"
@@ -19,8 +18,6 @@ source = { virtual = "." }
 [package.dev-dependencies]
 dev = [
     { name = "pyqt5-stubs" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
     { name = "ruff" },
 ]
 
