@@ -5,7 +5,7 @@ description = "Convert XML DEM files provided by Geospatial Information Authorit
 readme = "README.md"
 requires-python = ">=3.9"
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
     "pyqt5-stubs>=5.15.6.0",
     "pytest-cov>=6.0.0",
@@ -22,4 +22,4 @@ target-version = "py38"
 
 [tool.ruff.lint]
 select = ["F", "E", "W", "B", "C90", "N", "I"]
-ignore = ["N802", "E501", "C901"]
+ignore = ["N802", "E501", "C901", "N999"]
