@@ -4,10 +4,22 @@ version = "1.0.0"
 description = "Convert XML DEM files provided by Geospatial Information Authority of Japan(GSI) to GeoTiff format and/or Terrain RGB format DEM."
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = []
 
 [dependency-groups]
 dev = [
     "pyqt5-stubs>=5.15.6.0",
-    "ruff>=0.8.2",
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+    "ruff>=0.8.1",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = ["--import-mode=importlib"]
+
+[tool.ruff]
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "B", "C90", "N", "I"]
+ignore = ["N802", "E501"]

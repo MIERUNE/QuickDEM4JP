@@ -1,15 +1,11 @@
 permissions:
   contents: read
-name: Test plugin
+name: Test
 
 on:
   pull_request:
-    branches:
-      - master
-
-env:
-  # Docker settings
-  DOCKER_IMAGE: qgis/qgis
+  push:
+    branches: [master]
 
 jobs:
   Test:
@@ -27,7 +23,7 @@ jobs:
         run: docker pull qgis/qgis:${{ matrix.qgis_image_tag }}
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v5
         with:
           version: "latest"
           enable-cache: true
@@ -40,5 +36,5 @@ jobs:
         run: >
           docker run --rm --volume `pwd`:/app -w=/app qgis/qgis:${{ matrix.qgis_image_tag }} sh -c "
             pip3 install --require-hashes --no-deps -r requirements.txt &&
-            PYTHONPATH=/app xvfb-run -s '+extension GLX -screen 0 1024x768x24' plugin_dir.test_suite.test_package -v --cov --cov-report=xml --cov-report=term
+            PYTHONPATH=/app xvfb-run -s '+extension GLX -screen 0 1024x768x24' pytest -v --cov --cov-report=xml --cov-report=term
           "
