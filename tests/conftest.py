@@ -6,7 +6,7 @@ from typing import Iterable
 import pytest
 from qgis.core import QgsApplication
 from qgis.gui import QgsGui
-from quickdem4jp import classFactory
+from .. import classFactory
 
 
 @pytest.fixture(autouse=True, scope="session")
