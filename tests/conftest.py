@@ -1,7 +1,6 @@
 from typing import Iterable
 
 import pytest
-
 from qgis.gui import QgisInterface
 
 from ..__init__ import classFactory

@@ -1,5 +1,5 @@
-from ..plugin import QuickDEMforJP
 from ..contents import Contents
+from ..plugin import QuickDEMforJP
 
 
 def test_show_dialog(plugin: QuickDEMforJP):

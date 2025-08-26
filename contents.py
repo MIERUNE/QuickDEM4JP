@@ -28,10 +28,9 @@ from qgis.core import QgsProject, QgsRasterLayer
 from qgis.gui import QgsFileWidget
 from qgis.PyQt.QtWidgets import QMessageBox
 
-from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 from .convert_fgd_dem.src.convert_fgd_dem.converter import Converter
-
 from .progress_dialog import ProgressDialog
+from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 
 
 class Contents:
@@ -115,10 +114,10 @@ class Contents:
     def convert_DEM(self):
         progress_dialog = ProgressDialog(None)
 
-        do_GeoTiff = self.dlg.checkBox_outputGeoTiff.isChecked()
-        do_TerrainRGB = self.dlg.checkBox_outputTerrainRGB.isChecked()
+        do_geotiff = self.dlg.checkBox_outputGeoTiff.isChecked()
+        do_terrainrgb = self.dlg.checkBox_outputTerrainRGB.isChecked()
 
-        if not do_GeoTiff and not do_TerrainRGB:
+        if not do_geotiff and not do_terrainrgb:
             QMessageBox.information(
                 None,
                 progress_dialog.translate("Error"),
@@ -136,7 +135,7 @@ class Contents:
             return
 
         self.output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
-        if do_GeoTiff and not self.output_path:
+        if do_geotiff and not self.output_path:
             QMessageBox.information(
                 None,
                 progress_dialog.translate("Error"),
@@ -145,7 +144,7 @@ class Contents:
             return
 
         self.output_path_terrain = self.dlg.mQgsFileWidget_outputPathTerrain.filePath()
-        if do_TerrainRGB and not self.output_path_terrain:
+        if do_terrainrgb and not self.output_path_terrain:
             QMessageBox.information(
                 None,
                 progress_dialog.translate("Error"),
@@ -167,7 +166,7 @@ class Contents:
         do_add_layer = self.dlg.checkBox_openLayers.isChecked()
 
         try:
-            if do_GeoTiff and not self.process_interrupted:
+            if do_geotiff and not self.process_interrupted:
                 # check if directory exists
                 directory = os.path.dirname(self.output_path)
                 if not os.path.isdir(directory):
@@ -194,7 +193,7 @@ class Contents:
                         tiff_name=filename,
                         layer_name=os.path.splitext(filename)[0],
                     )
-            if do_TerrainRGB and not self.process_interrupted:
+            if do_terrainrgb and not self.process_interrupted:
                 # check if directory exists
                 directory = os.path.dirname(self.output_path_terrain)
                 if not os.path.isdir(directory):
