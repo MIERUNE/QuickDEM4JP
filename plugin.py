@@ -6,8 +6,7 @@ from qgis.gui import QgisInterface
 from qgis.PyQt.QtCore import QCoreApplication, QSettings, QTranslator
 from qgis.PyQt.QtWidgets import QAction, QToolButton
 
-from .processing_provider.quick_dem_for_jp_provider import \
-    QuickDEMforJPProvider
+from .processing_provider.quick_dem_for_jp_provider import QuickDEMforJPProvider
 
 
 class QuickDEMforJP:

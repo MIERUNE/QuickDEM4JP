@@ -24,11 +24,11 @@
 import os
 
 from qgis.core import (
-    QgsProcessingException,
     QgsProcessingAlgorithm,
-    QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterFile,
+    QgsProcessingException,
     QgsProcessingParameterCrs,
+    QgsProcessingParameterFile,
+    QgsProcessingParameterRasterDestination,
 )
 from qgis.PyQt.QtCore import QCoreApplication
 
@@ -150,6 +150,8 @@ class QuickDEMforJPProcessingAlgorithm(QgsProcessingAlgorithm):
             feedback.pushInfo(self.tr("Conversion completed."))
 
         except Exception as e:
-            raise QgsProcessingException(self.tr("An error occured: {}").format(str(e)))
+            raise QgsProcessingException(
+                self.tr("An error occured: {}").format(str(e))
+            ) from e
 
         return results
