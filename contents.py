@@ -52,7 +52,6 @@ class Contents:
         QgsProject.instance().addMapLayer(layer)
 
     def convert_DEM(self):
-
         if not self.import_path:
             QMessageBox.information(
                 None,
