@@ -25,48 +25,15 @@ import os
 import webbrowser
 
 from qgis.core import QgsProject, QgsRasterLayer
-from qgis.gui import QgsFileWidget
 from qgis.PyQt.QtWidgets import QMessageBox
 
 from .convert_fgd_dem.src.convert_fgd_dem.converter import Converter
-from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 
 
 class Contents:
     def __init__(self, iface):
         self.iface = iface
-        self.dlg = QuickDEMforJPDialog()
-
-        self.dlg.mQgsFileWidget_inputPath.setFilePath(QgsProject.instance().homePath())
-        self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetMultipleFiles)
-        self.dlg.mQgsFileWidget_inputPath.setFilter("*.xml;;*.zip")
-
-        self.dlg.mQgsFileWidget_outputPath.setFilePath(QgsProject.instance().homePath())
-        self.dlg.mQgsFileWidget_outputPath.setFilter("*.tiff")
-        self.dlg.mQgsFileWidget_outputPath.setDialogTitle("Set the output file")
-        self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(
-            QgsProject.instance().homePath()
-        )
-        self.dlg.mQgsFileWidget_outputPathTerrain.setFilter("*.tiff")
-        self.dlg.mQgsFileWidget_outputPathTerrain.setDialogTitle("Set the output file")
-
-        # set terrain path if changed
-        self.dlg.mQgsFileWidget_outputPath.fileChanged.connect(self.set_terrain_path)
-        self.dlg.checkBox_outputTerrainRGB.stateChanged.connect(self.set_terrain_path)
-
-        self.dlg.mQgsProjectionSelectionWidget_outputCrs.setCrs(
-            QgsProject.instance().crs()
-        )
-
-        self.dlg.radioButton_xmlzipfile.toggled.connect(self.switch_input_type)
-        self.dlg.radioButton_folder.toggled.connect(self.switch_input_type)
-
-        self.dlg.button_box.accepted.connect(self.convert_DEM)
-        self.dlg.button_box.rejected.connect(self.dlg_cancel)
-
-        self.dlg.downloadButton.clicked.connect(self.on_download_page_clicked)
-
-        self.process_interrupted = False
+        self.import_path = ""
 
     def convert(self, output_path, filename, rgbify):
         thread = Converter(
@@ -75,7 +42,7 @@ class Contents:
             output_epsg=self.output_epsg,
             file_name=filename,
             rgbify=rgbify,
-            sea_at_zero=self.dlg.checkBox_sea_zero.isChecked(),
+            sea_at_zero=False,
         )
 
         thread.start()
@@ -85,105 +52,13 @@ class Contents:
         QgsProject.instance().addMapLayer(layer)
 
     def convert_DEM(self):
-        do_geotiff = self.dlg.checkBox_outputGeoTiff.isChecked()
-        do_terrainrgb = self.dlg.checkBox_outputTerrainRGB.isChecked()
 
-        if not do_geotiff and not do_terrainrgb:
-            QMessageBox.information(
-                None,
-                "Error",
-                "Output format is not checked.",
-            )
-            return
-
-        self.import_path = self.dlg.mQgsFileWidget_inputPath.filePath()
         if not self.import_path:
             QMessageBox.information(
                 None,
                 "Error",
                 "Input DEM path is not defined.",
             )
-            return
-
-        self.output_path = self.dlg.mQgsFileWidget_outputPath.filePath()
-        if do_geotiff and not self.output_path:
-            QMessageBox.information(
-                None,
-                "Error",
-                "GeoTIFF output path is not defined.",
-            )
-            return
-
-        self.output_path_terrain = self.dlg.mQgsFileWidget_outputPathTerrain.filePath()
-        if do_terrainrgb and not self.output_path_terrain:
-            QMessageBox.information(
-                None,
-                "Error",
-                "Terrain RGB output path is not defined.",
-            )
-            return
-
-        self.output_epsg = (
-            self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
-        )
-
-        do_add_layer = self.dlg.checkBox_openLayers.isChecked()
-
-        try:
-            if do_geotiff and not self.process_interrupted:
-                # check if directory exists
-                directory = os.path.dirname(self.output_path)
-                if not os.path.isdir(directory):
-                    QMessageBox.information(
-                        None,
-                        "Error",
-                        "Cannot find output folder." + f"\n{directory}",
-                    )
-                    return
-                filename = os.path.basename(self.output_path)
-                # Add .tiff to output path if missing
-                if not filename.lower().endswith(".tiff"):
-                    filename += ".tiff"
-
-                self.convert(
-                    output_path=os.path.dirname(self.output_path),
-                    filename=filename,
-                    rgbify=False,
-                )
-                if do_add_layer and not self.process_interrupted:
-                    self.add_layer(
-                        os.path.dirname(self.output_path),
-                        tiff_name=filename,
-                        layer_name=os.path.splitext(filename)[0],
-                    )
-            if do_terrainrgb and not self.process_interrupted:
-                # check if directory exists
-                directory = os.path.dirname(self.output_path_terrain)
-                if not os.path.isdir(directory):
-                    QMessageBox.information(
-                        None,
-                        "Error",
-                        "Cannot find output folder." + f"\n{directory}",
-                    )
-                    return
-                filename = os.path.basename(self.output_path_terrain)
-                # Add .tiff to output path if missing
-                if not filename.lower().endswith(".tiff"):
-                    filename += ".tiff"
-
-                self.convert(
-                    os.path.dirname(self.output_path_terrain),
-                    filename=filename,
-                    rgbify=True,
-                )
-                if do_add_layer and not self.process_interrupted:
-                    self.add_layer(
-                        os.path.dirname(self.output_path_terrain),
-                        tiff_name=filename,
-                        layer_name=os.path.splitext(filename)[0],
-                    )
-        except Exception as e:
-            QMessageBox.information(None, "Error", str(e))
             return
 
         if not self.process_interrupted:
@@ -193,36 +68,7 @@ class Contents:
                 "Process completed.",
             )
 
-        self.dlg.hide()
-
         return True
-
-    def dlg_cancel(self):
-        self.dlg.hide()
-
-    def switch_input_type(self):
-        if self.dlg.radioButton_xmlzipfile.isChecked():
-            self.dlg.mQgsFileWidget_inputPath.setStorageMode(
-                QgsFileWidget.GetMultipleFiles
-            )
-        else:
-            self.dlg.mQgsFileWidget_inputPath.setStorageMode(QgsFileWidget.GetDirectory)
-
-    def set_terrain_path(self):
-        # set Terrain file path automatically if path is not defined and Geotiff path is defined
-        geotiff_path = self.dlg.mQgsFileWidget_outputPath.filePath()
-        if (
-            self.dlg.checkBox_outputTerrainRGB.isChecked()
-            and os.path.splitext(geotiff_path)[1] == ".tiff"
-            and not self.dlg.mQgsFileWidget_outputPathTerrain.filePath()
-            .lower()
-            .endswith(".tiff")
-        ):
-            terrain_path = (
-                os.path.splitext(geotiff_path)[0]
-                + f"_Terrain-RGB{os.path.splitext(os.path.basename(geotiff_path))[1]}"
-            )
-            self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(terrain_path)
 
     def on_download_page_clicked(self):
         webbrowser.open("https://service.gsi.go.jp/kiban/app/map/?search=dem")
