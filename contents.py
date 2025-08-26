@@ -34,7 +34,6 @@ from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 
 class Contents:
     def __init__(self, iface):
-
         self.iface = iface
         self.dlg = QuickDEMforJPDialog()
 
@@ -70,7 +69,6 @@ class Contents:
         self.process_interrupted = False
 
     def convert(self, output_path, filename, rgbify):
-
         thread = Converter(
             import_path=self.import_path,
             output_path=output_path,
@@ -87,7 +85,6 @@ class Contents:
         QgsProject.instance().addMapLayer(layer)
 
     def convert_DEM(self):
-
         do_geotiff = self.dlg.checkBox_outputGeoTiff.isChecked()
         do_terrainrgb = self.dlg.checkBox_outputTerrainRGB.isChecked()
 
