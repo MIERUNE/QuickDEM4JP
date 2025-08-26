@@ -29,13 +29,11 @@ from qgis.gui import QgsFileWidget
 from qgis.PyQt.QtWidgets import QMessageBox
 
 from .convert_fgd_dem.src.convert_fgd_dem.converter import Converter
-from .progress_dialog import ProgressDialog
 from .quick_dem_for_jp_dialog import QuickDEMforJPDialog
 
 
 class Contents:
     def __init__(self, iface):
-        progress_dialog = ProgressDialog(None)
 
         self.iface = iface
         self.dlg = QuickDEMforJPDialog()
@@ -46,16 +44,12 @@ class Contents:
 
         self.dlg.mQgsFileWidget_outputPath.setFilePath(QgsProject.instance().homePath())
         self.dlg.mQgsFileWidget_outputPath.setFilter("*.tiff")
-        self.dlg.mQgsFileWidget_outputPath.setDialogTitle(
-            progress_dialog.translate("Set the output file")
-        )
+        self.dlg.mQgsFileWidget_outputPath.setDialogTitle("Set the output file")
         self.dlg.mQgsFileWidget_outputPathTerrain.setFilePath(
             QgsProject.instance().homePath()
         )
         self.dlg.mQgsFileWidget_outputPathTerrain.setFilter("*.tiff")
-        self.dlg.mQgsFileWidget_outputPathTerrain.setDialogTitle(
-            progress_dialog.translate("Set the output file")
-        )
+        self.dlg.mQgsFileWidget_outputPathTerrain.setDialogTitle("Set the output file")
 
         # set terrain path if changed
         self.dlg.mQgsFileWidget_outputPath.fileChanged.connect(self.set_terrain_path)
@@ -76,7 +70,6 @@ class Contents:
         self.process_interrupted = False
 
     def convert(self, output_path, filename, rgbify):
-        progress_dialog = ProgressDialog(None)
 
         thread = Converter(
             import_path=self.import_path,
@@ -87,32 +80,13 @@ class Contents:
             sea_at_zero=self.dlg.checkBox_sea_zero.isChecked(),
         )
 
-        progress_dialog.abortButton.clicked.connect(
-            lambda: [
-                self.on_abort_clicked(thread, progress_dialog),
-            ]
-        )
-        # progress dialog orchestation by process thread
-        thread.setMaximum.connect(progress_dialog.set_maximum)
-        thread.addProgress.connect(progress_dialog.add_progress)
-        thread.postMessage.connect(progress_dialog.set_message)
-        thread.setAbortable.connect(progress_dialog.set_abortable)
-        thread.processFinished.connect(progress_dialog.close)
-        thread.processFailed.connect(
-            lambda error_message: [
-                self.handle_process_failed(error_message, thread, progress_dialog)
-            ]
-        )
-
         thread.start()
-        progress_dialog.exec_()
 
     def add_layer(self, output_path, tiff_name, layer_name):
         layer = QgsRasterLayer(os.path.join(output_path, tiff_name), layer_name)
         QgsProject.instance().addMapLayer(layer)
 
     def convert_DEM(self):
-        progress_dialog = ProgressDialog(None)
 
         do_geotiff = self.dlg.checkBox_outputGeoTiff.isChecked()
         do_terrainrgb = self.dlg.checkBox_outputTerrainRGB.isChecked()
@@ -120,8 +94,8 @@ class Contents:
         if not do_geotiff and not do_terrainrgb:
             QMessageBox.information(
                 None,
-                progress_dialog.translate("Error"),
-                progress_dialog.translate("Output format is not checked."),
+                "Error",
+                "Output format is not checked.",
             )
             return
 
@@ -129,8 +103,8 @@ class Contents:
         if not self.import_path:
             QMessageBox.information(
                 None,
-                progress_dialog.translate("Error"),
-                progress_dialog.translate("Input DEM path is not defined."),
+                "Error",
+                "Input DEM path is not defined.",
             )
             return
 
@@ -138,8 +112,8 @@ class Contents:
         if do_geotiff and not self.output_path:
             QMessageBox.information(
                 None,
-                progress_dialog.translate("Error"),
-                progress_dialog.translate("GeoTIFF output path is not defined."),
+                "Error",
+                "GeoTIFF output path is not defined.",
             )
             return
 
@@ -147,21 +121,14 @@ class Contents:
         if do_terrainrgb and not self.output_path_terrain:
             QMessageBox.information(
                 None,
-                progress_dialog.translate("Error"),
-                progress_dialog.translate("Terrain RGB output path is not defined."),
+                "Error",
+                "Terrain RGB output path is not defined.",
             )
             return
 
         self.output_epsg = (
             self.dlg.mQgsProjectionSelectionWidget_outputCrs.crs().authid()
         )
-        if not self.output_epsg:
-            QMessageBox.information(
-                None,
-                progress_dialog.translate("Error"),
-                progress_dialog.translate("CRS of output file is not defined."),
-            )
-            return
 
         do_add_layer = self.dlg.checkBox_openLayers.isChecked()
 
@@ -172,9 +139,8 @@ class Contents:
                 if not os.path.isdir(directory):
                     QMessageBox.information(
                         None,
-                        progress_dialog.translate("Error"),
-                        progress_dialog.translate("Cannot find output folder.")
-                        + f"\n{directory}",
+                        "Error",
+                        "Cannot find output folder." + f"\n{directory}",
                     )
                     return
                 filename = os.path.basename(self.output_path)
@@ -199,9 +165,8 @@ class Contents:
                 if not os.path.isdir(directory):
                     QMessageBox.information(
                         None,
-                        progress_dialog.translate("Error"),
-                        progress_dialog.translate("Cannot find output folder.")
-                        + f"\n{directory}",
+                        "Error",
+                        "Cannot find output folder." + f"\n{directory}",
                     )
                     return
                 filename = os.path.basename(self.output_path_terrain)
@@ -221,16 +186,14 @@ class Contents:
                         layer_name=os.path.splitext(filename)[0],
                     )
         except Exception as e:
-            QMessageBox.information(
-                None, progress_dialog.translate("Error"), progress_dialog.translate(e)
-            )
+            QMessageBox.information(None, "Error", str(e))
             return
 
         if not self.process_interrupted:
             QMessageBox.information(
                 None,
-                progress_dialog.translate("Completed"),
-                progress_dialog.translate("Process completed."),
+                "Completed",
+                "Process completed.",
             )
 
         self.dlg.hide()
@@ -268,34 +231,5 @@ class Contents:
         webbrowser.open("https://service.gsi.go.jp/kiban/app/map/?search=dem")
         return
 
-    def on_abort_clicked(self, thread, progress_dialog: ProgressDialog) -> None:
-        if QMessageBox.Yes == QMessageBox.question(
-            None,
-            progress_dialog.translate("Aborting"),
-            progress_dialog.translate("Are you sure to cancel process?"),
-            QMessageBox.Yes,
-            QMessageBox.No,
-        ):
-            self.set_interrupted()
-            thread.process_interrupted = True
-            self.abort_process(thread, progress_dialog)
-
-    def abort_process(self, thread, progress_dialog: ProgressDialog) -> None:
-        if self.process_interrupted:
-            thread.exit()
-            progress_dialog.abort_dialog()
-            self.dlg_cancel()
-            return
-
     def set_interrupted(self):
         self.process_interrupted = True
-
-    def handle_process_failed(self, error_message, thread, progress_dialog):
-        progress_dialog.close()
-        QMessageBox.information(
-            None,
-            progress_dialog.translate("Error"),
-            progress_dialog.translate(error_message),
-        )
-        self.set_interrupted()
-        self.abort_process(thread, progress_dialog)
