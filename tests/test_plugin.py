@@ -2,7 +2,7 @@ from qgis.core import QgsApplication
 from qgis.PyQt.QtGui import QIcon
 
 
-def test_registered(provider: str):
+def test_registered(qgis_app: QgsApplication, provider: str):
     registry = QgsApplication.processingRegistry()
     provider = registry.providerById("quickdemforjp")
     assert provider is not None
