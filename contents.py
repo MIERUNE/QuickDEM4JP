@@ -36,7 +36,7 @@ class Contents:
         self.import_path = ""
 
     def convert(self, output_path, filename, rgbify):
-        thread = Converter(
+        converter = Converter(
             import_path=self.import_path,
             output_path=output_path,
             output_epsg=self.output_epsg,
@@ -45,7 +45,7 @@ class Contents:
             sea_at_zero=False,
         )
 
-        thread.start()
+        converter.run()
 
     def add_layer(self, output_path, tiff_name, layer_name):
         layer = QgsRasterLayer(os.path.join(output_path, tiff_name), layer_name)
