@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        qgis_image_tag: [release-3_28, release-3_34]
+        qgis_image_tag: [release-3_34]
     env:
       OS: ubuntu
       QGIS_IMAGE_TAG: ${{ matrix.qgis_image_tag }}
