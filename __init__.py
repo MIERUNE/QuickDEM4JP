@@ -21,6 +21,7 @@
  *                                                                         *
  ***************************************************************************/
 """
+
 from qgis._gui import QgisInterface
 
 from .plugin import QuickDEMforJP
