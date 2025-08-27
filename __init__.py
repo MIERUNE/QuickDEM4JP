@@ -24,8 +24,6 @@
 
 from qgis._gui import QgisInterface
 
-from .plugin import QuickDEMforJP
-
 
 # noinspection PyPep8Naming
 def classFactory(iface: QgisInterface):  # pylint: disable=invalid-name
@@ -35,5 +33,6 @@ def classFactory(iface: QgisInterface):  # pylint: disable=invalid-name
     :type iface: QgsInterface
     """
     #
+    from .plugin import QuickDEMforJP
 
     return QuickDEMforJP(iface)
