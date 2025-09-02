@@ -85,7 +85,6 @@ class Contents:
             output_epsg=self.output_epsg,
             file_name=filename,
             rgbify=rgbify,
-            sea_at_zero=self.dlg.checkBox_sea_zero.isChecked(),
         )
 
         progress_dialog.abortButton.clicked.connect(
