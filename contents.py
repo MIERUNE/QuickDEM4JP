@@ -42,7 +42,6 @@ class Contents:
             output_epsg=self.output_epsg,
             file_name=filename,
             rgbify=rgbify,
-            sea_at_zero=False,
         )
 
         converter.run()
