@@ -5,7 +5,7 @@ from typing import Iterable
 
 import pytest
 from qgis.core import QgsApplication
-from qgis.gui import QgsGui
+from qgis.gui import QgisInterface, QgsGui
 
 from .. import classFactory
 
@@ -34,8 +34,8 @@ def qgis_app(tmp_path_factory) -> Iterable[QgsApplication]:
 
 
 @pytest.fixture()
-def provider(qgis_app: QgsApplication) -> Iterable[None]:
-    plugin = classFactory(None)  # pyright: ignore
+def provider(qgis_iface: QgisInterface) -> Iterable[None]:
+    plugin = classFactory(qgis_iface)  # pyright: ignore
     plugin.initGui()
 
     yield None
