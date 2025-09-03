@@ -22,9 +22,11 @@
  ***************************************************************************/
 """
 
+from qgis._gui import QgisInterface
+
 
 # noinspection PyPep8Naming
-def classFactory(iface):  # pylint: disable=invalid-name
+def classFactory(iface: QgisInterface):  # pylint: disable=invalid-name
     """Load QuickDEMforJP class from file QuickDEMforJP.
 
     :param iface: A QGIS interface instance.
@@ -32,4 +34,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     """
     #
     from .plugin import QuickDEMforJP
+
     return QuickDEMforJP(iface)
