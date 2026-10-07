@@ -17,4 +17,4 @@ dev = [
 ignore = ["N802", "E501", "C901", "N999"]
 
 [tool.bandit]
-exclude_dirs = ["tests", ".venv", "convert_fgd_dem"]
+exclude_dirs = ["tests", ".venv"]
