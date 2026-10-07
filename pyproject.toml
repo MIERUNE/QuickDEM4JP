@@ -18,3 +18,6 @@ ignore = ["N802", "E501", "C901", "N999"]
 
 [tool.bandit]
 exclude_dirs = ["tests", ".venv"]
+
+[tool.uv]
+exclude-newer = "7 days"
