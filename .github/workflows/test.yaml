@@ -16,31 +16,46 @@ jobs:
   Test-plugin:
     runs-on: ubuntu-latest
 
+    # QGIS 4 (Qt6) does not make the PR fail until it is known to be stable here
+    continue-on-error: ${{ matrix.experimental == true }}
+
     strategy:
+      fail-fast: false
       matrix:
-        docker_tags: [release-3_36]
+        include:
+          - docker_tags: "3.44"
+          - docker_tags: "4.0-trixie"
+            experimental: true
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Export requirements.txt
         run: |
           pip3 install uv
           uv export -o requirements.txt --no-dev --no-hashes
 
-      - name: Docker pull and create qgis-testing-environment
-        run: |
-          docker pull "$DOCKER_IMAGE":${{ matrix.docker_tags }}
-          docker run -d --name qgis-testing-environment -v .:/tests_directory/plugin_dir -e DISPLAY=:99 "$DOCKER_IMAGE":${{ matrix.docker_tags }}
+      # The images no longer start a test environment (supervisord) and do not
+      # all ship qgis_testrunner.sh, so the tests are run directly.
+      - name: Docker pull
+        run: docker pull "$DOCKER_IMAGE":${{ matrix.docker_tags }}
 
-      - name: Docker set up QGIS
+      - name: Docker run tests
         run: |
-          docker exec qgis-testing-environment sh -c "qgis_setup.sh plugin_dir"
-          docker exec qgis-testing-environment sh -c "rm -f /root/.local/share/QGIS/QGIS3/profiles/default/python/plugins/plugin_dir"
-          docker exec qgis-testing-environment sh -c "ln -s /tests_directory/plugin_dir /root/.local/share/QGIS/QGIS3/profiles/default/python/plugins/plugin_dir"
-          docker exec qgis-testing-environment sh -c "pip3 install -r /tests_directory/plugin_dir/requirements.txt"
-
-      - name: Docker run plugin tests
-        run: |
-          docker exec qgis-testing-environment sh -c "qgis_testrunner.sh plugin_dir.test_suite.test_package"
+          docker run --rm \
+            -v "$PWD":/tests_directory/plugin_dir \
+            -w /tests_directory/plugin_dir \
+            -e QT_QPA_PLATFORM=offscreen \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            "$DOCKER_IMAGE":${{ matrix.docker_tags }} \
+            sh -c '
+              set -e
+              # The images are "externally managed" (PEP 668)
+              pip3 install --break-system-packages -r requirements.txt
+              python3 -m unittest discover -s tests -t . -v
+              # Not found by the plugin test discovery: the submodule is not a package
+              python3 -m unittest discover -s convert_fgd_dem/tests -t . -v
+            '
