@@ -8,9 +8,16 @@ dependencies = []
 
 [dependency-groups]
 dev = [
+    "bandit[toml]>=1.8",
     "pyqt5-stubs>=5.15.6.0",
     "ruff>=0.8.2",
 ]
 
 [tool.ruff.lint]
 ignore = ["N802", "E501", "C901", "N999"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+
+[tool.uv]
+exclude-newer = "7 days"

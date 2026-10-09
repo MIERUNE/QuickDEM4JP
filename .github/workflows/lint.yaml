@@ -28,3 +28,10 @@ jobs:
 
       - name: Format with ruff
         run: uv run ruff format . --check --diff
+
+      # Fetched after ruff so that it only checks this repository
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Security check with bandit
+        run: uv run bandit -c pyproject.toml -l -r .
